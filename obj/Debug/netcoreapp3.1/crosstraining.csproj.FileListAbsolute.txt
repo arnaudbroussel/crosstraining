@@ -1,0 +1,11 @@
+C:\Users\arnaud.broussel\source\repos\crosstraining\bin\Debug\netcoreapp3.1\crosstraining.exe
+C:\Users\arnaud.broussel\source\repos\crosstraining\bin\Debug\netcoreapp3.1\crosstraining.deps.json
+C:\Users\arnaud.broussel\source\repos\crosstraining\bin\Debug\netcoreapp3.1\crosstraining.runtimeconfig.json
+C:\Users\arnaud.broussel\source\repos\crosstraining\bin\Debug\netcoreapp3.1\crosstraining.runtimeconfig.dev.json
+C:\Users\arnaud.broussel\source\repos\crosstraining\bin\Debug\netcoreapp3.1\crosstraining.dll
+C:\Users\arnaud.broussel\source\repos\crosstraining\bin\Debug\netcoreapp3.1\crosstraining.pdb
+C:\Users\arnaud.broussel\source\repos\crosstraining\obj\Debug\netcoreapp3.1\crosstraining.AssemblyInfoInputs.cache
+C:\Users\arnaud.broussel\source\repos\crosstraining\obj\Debug\netcoreapp3.1\crosstraining.AssemblyInfo.cs
+C:\Users\arnaud.broussel\source\repos\crosstraining\obj\Debug\netcoreapp3.1\crosstraining.dll
+C:\Users\arnaud.broussel\source\repos\crosstraining\obj\Debug\netcoreapp3.1\crosstraining.pdb
+C:\Users\arnaud.broussel\source\repos\crosstraining\obj\Debug\netcoreapp3.1\crosstraining.csprojAssemblyReference.cache
