@@ -14,14 +14,27 @@
             return iSum;
         }
 
-        private static void show(MultipleOfEventArgs e) {
-            Console.WriteLine($"{e.Value} is a multiple of {e.Text} reached! ");
+        public void ProcessAction(int x, int y, Action<int, int> action) {
+            action(x, y);            
         }
 
-        public static void a_MultipleOfFiveReached(object sender, MultipleOfEventArgs e) { show(e); }
+        public Action<int, int> SumActionFor10 = (x, y) => {
+            x = x * 10;
+            y++;
+            Console.WriteLine(x + y);
+        };
 
-        public static void a_MultipleOfTenReached(object sender, MultipleOfTenEventArgs e) { show(e);}
+        public Action<int, int> SumActionFor20 = (x, y) => {
+            x = x * 20;
+            y++;
+            Console.WriteLine(x + y);
+        };
 
-        public static void a_MultipleOfOtherReached(object sender, MultipleOfOtherEventArgs e) { show(e); }
+        public Action<int, int> SumActionForOther = (x, y) => {
+            if (x > 10)
+                Console.WriteLine("(x > 10)");
+            else
+                Console.WriteLine("(x <= 10)");
+        };
     }
 }

@@ -8,7 +8,8 @@
         static void Main(string[] args) {
             //UseGenericInterfaces();
             //UseInterfaces();
-            EventsAndHandlers();
+            //EventsAndHandlers();
+            ActionsOfSomething();
         }
 
         private static void UseGenericInterfaces() {
@@ -34,9 +35,25 @@
         private static void EventsAndHandlers() {
             Adder a = new Adder();
 
-            a.OnMultipleOfFiveReached += Adder.a_MultipleOfFiveReached;
-            a.OnMultipleOfTenReached += Adder.a_MultipleOfTenReached;
-            a.OnMultipleOfOtherReached += Adder.a_MultipleOfOtherReached;
+            a.OnMultipleOfFiveReached += ThingsToDo.ProcessMultipleOfFiveReached;
+
+            // same event to process several actions
+            a.OnMultipleOfTenReached += ThingsToDo.ProcessMultipleOfTenReached;
+            // anonymous (no need to refer to a method to be executed with parameters)
+            a.OnMultipleOfTenReached += (s, e) => ThingsToDo.ProcessSourceLambda(e, "TEN");
+
+            // below several examples to attach an action to be performed on an event:
+            // (actually here, 1 event raises several actions)
+            a.OnMultipleOfOtherReached += ThingsToDo.ProcessMultipleOfOtherReached;
+            a.OnMultipleOfOtherReached += new EventHandler<MultipleOfOtherEventArgs>(ThingsToDo.ProcessMultipleOfOtherReached);
+            // anonymous --> here is "live attachment"...
+            a.OnMultipleOfOtherReached += delegate (object sender, MultipleOfOtherEventArgs e) {
+                Console.WriteLine($"ANONYMOUS METHOD --> {e.Value} is a multiple of {e.Text} reached! ");
+            };
+            // lambda --> here is "live attachment"...
+            a.OnMultipleOfOtherReached += (s, e) => {
+                Console.WriteLine($"LAMBDA METHOD --> {e.Value} is a multiple of {e.Text} reached! ");
+            };
 
             int iAnswer = a.Add(4, 3);
             Console.WriteLine("------------------------");
@@ -53,5 +70,24 @@
             iAnswer = a.Add(1, 1);
             Console.WriteLine("------------------------");
         }
-    } 
+
+        private static void ActionsOfSomething() {
+            Adder a = new Adder();
+
+            Action<int, int> SumActionFor1000 = (x, y) => {
+                x = x * 1000;
+                y++;
+                Console.WriteLine($"Local action {x + y}");
+            };
+
+            // use in other class actions
+            a.ProcessAction(10, 1, a.SumActionFor10);
+            a.ProcessAction(10, 1, a.SumActionFor20);
+            a.ProcessAction(1, 1, a.SumActionForOther);
+            a.ProcessAction(11, 1, a.SumActionForOther);
+
+            // user local action
+            a.ProcessAction(10, 1, SumActionFor1000);
+        }
+    }
 }
