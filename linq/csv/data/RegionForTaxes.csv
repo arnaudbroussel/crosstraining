@@ -1,0 +1,7 @@
+Legislation,Name,IsTheMainRegion,UseMainTaxes,UseFromTaxes
+CA,Alberta,No,No,No
+CA,Quebec,No,No,No
+CA,British Columbia,No,No,No
+ES,TC,Yes,No,Yes
+ES,Canarias,No,No,Yes
+ES,Vizcaya,No,Yes,Yes

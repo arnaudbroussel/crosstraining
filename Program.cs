@@ -2,14 +2,18 @@
     using crosstraining.events;
     using crosstraining.inheritance.genericinterface;
     using crosstraining.inheritance.useinterface;
+    using crosstraining.linq.csv;
+    using crosstraining.linq.csv.Entities;
     using System;
+    using System.Collections.Generic;
 
     class Program {
         static void Main(string[] args) {
             //UseGenericInterfaces();
             //UseInterfaces();
             //EventsAndHandlers();
-            ActionsOfSomething();
+            //ActionsOfSomething();
+            LinqCSV();
         }
 
         private static void UseGenericInterfaces() {
@@ -88,6 +92,23 @@
 
             // user local action
             a.ProcessAction(10, 1, SumActionFor1000);
+        }
+
+        private static void LinqCSV() {
+            MockData MockData = new MockData();
+            List<RegionForTaxesEntity> RegionForTaxesEntityList = MockData.RegionForTaxesEntityList;
+            List<TaxRateEntity> TaxRateEntityList = MockData.TaxRateEntityList;
+            List<TaxTreatmentEntity> TaxTreatmentEntityList = MockData.TaxTreatmentEntityList;
+
+            foreach (var e in RegionForTaxesEntityList) {
+                Console.WriteLine($"{e.Name} {e.Legislation} {e.IsTheMainRegion} {e.UseFromTaxes} {e.UseMainTaxes}");
+            }
+            foreach (var e in TaxRateEntityList) {
+                Console.WriteLine($"{e.Id} {e.Legislation} {e.Name} {e.RegionForTaxes} {e.TaxTreatment} {e.TaxItemType} {e.TaxCode} {e.Rate}");
+            }
+            foreach (var e in TaxTreatmentEntityList) {
+                Console.WriteLine($"{e.Id} {e.Legislation} {e.TaxTreatment} {e.RegionForTaxes} {e.UseFromTaxes}");
+            }
         }
     }
 }
