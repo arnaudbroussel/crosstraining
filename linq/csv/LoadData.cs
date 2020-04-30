@@ -9,28 +9,54 @@ using System.Text;
 namespace crosstraining.linq.csv {
     public class LoadData {
 
-        public static List<RegionForTaxesEntity> ExtractRegionForTaxesFromCSV(string path) {
+        public enum RelationType { RegionForTaxes, TaxTreatments, TaxItemTypes, TaxCodes, TaxRates };
+
+        private Dictionary<RelationType, Dictionary<string, Guid>> PrimaryKeys = new Dictionary<RelationType, Dictionary<string, Guid>>();
+
+        private List<RegionForTaxesEntity> regionForTaxesEntityList;
+        private List<TaxTreatmentEntity> taxTreatmentEntityList;
+        private List<TaxRateEntity> taxRateEntityList;
+
+        public List<RegionForTaxesEntity> RegionForTaxesEntityList { get { return this.regionForTaxesEntityList; } }
+        public List<TaxTreatmentEntity> TaxTreatmentEntityList { get { return this.taxTreatmentEntityList; } }
+        public List<TaxRateEntity> TaxRateEntityList { get { return this.taxRateEntityList; } }
+
+        public void AddPrimaryKey(RelationType relationType, string key, Guid id) {
+            if (this.PrimaryKeys.ContainsKey(relationType))
+                this.PrimaryKeys[relationType].Add(key, id);
+            else
+                this.PrimaryKeys.Add(relationType, new Dictionary<string, Guid>() { { key, id } });
+        }
+
+        public void ExtractRegionForTaxesFromCSV(string path) {
             var query = File.ReadAllLines(path)
                        .Skip(1)
                        .Where(l => l.Length > 1)
                        .ToRegionForTaxesEntity();
-            return query.ToList();
+            this.regionForTaxesEntityList = query.ToList();
+
+            this.PrimaryKeys.Add(RelationType.RegionForTaxes, this.regionForTaxesEntityList.ToDictionary(x => x.Name, x => x.Id));
         }
 
-        public static List<TaxRateEntity> ExtractTaxRatesFromCSV(string path) {
+        public void ExtractTaxRatesFromCSV(string path) {
             var query = File.ReadAllLines(path)
                        .Skip(1)
                        .Where(l => l.Length > 1)
-                       .ToTaxRateEntity();
-            return query.ToList();
+                       .ToTaxRateEntity(this.PrimaryKeys);
+            this.taxRateEntityList = query.ToList();
+
+            this.PrimaryKeys.Add(RelationType.TaxRates, this.taxRateEntityList.ToDictionary(x => x.Name, x => x.Id));
         }
 
-        public static List<TaxTreatmentEntity> ExtractTaxTreatmentsFromCSV(string path) {
+        public void ExtractTaxTreatmentsFromCSV(string path) {
             var query = File.ReadAllLines(path)
                        .Skip(1)
                        .Where(l => l.Length > 1)
-                       .ToTaxTreatmentEntity();
-            return query.ToList();
+                       .ToTaxTreatmentEntity(this.PrimaryKeys);
+
+            this.taxTreatmentEntityList = query.ToList();
+
+            this.PrimaryKeys.Add(RelationType.TaxTreatments, this.taxTreatmentEntityList.ToDictionary(x => x.TaxTreatment, x => x.Id));
         }
     }
 }

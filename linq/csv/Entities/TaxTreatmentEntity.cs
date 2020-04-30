@@ -7,5 +7,6 @@ namespace crosstraining.linq.csv.Entities {
         public string TaxTreatment { get; set; }
         public string RegionForTaxes { get; set; }
         public bool UseFromTaxes { get; set; }
+        public Guid? RegionForTaxesId { get; set; }
     }
 }

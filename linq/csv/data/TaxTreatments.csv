@@ -1,16 +1,16 @@
 ID,Legislation,Tax Treatment,RegionForTaxes,UseFromTaxes
-cad7d1a4-1002-4715-ad6e-e308bbc2b03d,UK,Sales to UK,,No
-b016de58-9b8e-408f-b665-431f34f3794f,UK,Sales to EU,,No
-c47fe6ea-5bb9-43b2-b777-3e202775503b,UK,Sales to ROW,,No
-c6778c5e-e72d-4952-83f3-4194efc03355,CA,Sales,,No
-93593f9d-e169-48e0-8a54-cf32130c9577,CA,Sales in Alberta,Alberta,No
-88079c33-8fc0-4752-a019-467e020ff32f,CA,Sales in Quebec,Quebec,No
-cc40b803-8cd4-4fa7-bdd4-e473c66b5f06,ES,Ventas Bienes y Servicios,TC,Yes
-62221f0c-0fde-4100-959c-953b2d593e4f,ES,Ventas Bienes y Servicios (IGIC),Canarias,Yes
-c7c67a5d-a225-4ab7-a8d2-581a33a1f501,ES,Ventas Bienes y Servicios a Peninsula (IGIC),Canarias,Yes
-e09650cc-91d5-4f68-9c3c-9232085b11f6,ES,Ventas Generales,,Yes
-cb4cd3a9-eb2b-4260-a6df-deb39d7af183,ES,Ventas de Obras de Arte,TC,Yes
-4d940c35-916c-4794-a220-2a784e864d49,ES,Ventas de Obras de Arte (IGIC),Canarias,Yes
-70d202b4-da3b-4fd4-94db-5b368ebd895e,CA,Purchases,,Yes
-9824fb83-fde8-4e41-9337-7a71e13e6f58,CA,Purchases in Alberta,Alberta,Yes
-489be130-5d57-4035-8ba0-3035015aebd5,ES,Ventas Bienes y Servicios a Canarias,TC,Yes
+1,UK,Sales to UK,,No
+2,UK,Sales to EU,,No
+3,UK,Sales to ROW,,No
+4,CA,Sales,,No
+5,CA,Sales in Alberta,Alberta,No
+6,CA,Sales in Quebec,Quebec,No
+7,ES,Ventas Bienes y Servicios,TC,Yes
+8,ES,Ventas Bienes y Servicios (IGIC),Canarias,Yes
+9,ES,Ventas Bienes y Servicios a Peninsula (IGIC),Canarias,Yes
+10,ES,Ventas Generales,,Yes
+11,ES,Ventas de Obras de Arte,TC,Yes
+12,ES,Ventas de Obras de Arte (IGIC),Canarias,Yes
+13,CA,Purchases,,Yes
+14,CA,Purchases in Alberta,Alberta,Yes
+15,ES,Ventas Bienes y Servicios a Canarias,TC,Yes

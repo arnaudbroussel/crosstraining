@@ -1,5 +1,6 @@
 ﻿namespace crosstraining {
     using crosstraining.events;
+    using crosstraining.hierarchy;
     using crosstraining.inheritance.genericinterface;
     using crosstraining.inheritance.useinterface;
     using crosstraining.linq.csv;
@@ -13,7 +14,8 @@
             //UseInterfaces();
             //EventsAndHandlers();
             //ActionsOfSomething();
-            LinqCSV();
+            //LinqCSV();
+            Repository();
         }
 
         private static void UseGenericInterfaces() {
@@ -101,14 +103,49 @@
             List<TaxTreatmentEntity> TaxTreatmentEntityList = MockData.TaxTreatmentEntityList;
 
             foreach (var e in RegionForTaxesEntityList) {
-                Console.WriteLine($"{e.Name} {e.Legislation} {e.IsTheMainRegion} {e.UseFromTaxes} {e.UseMainTaxes}");
+                Console.WriteLine($"{e.Id} {e.Name} {e.Legislation} {e.IsTheMainRegion} {e.UseFromTaxes} {e.UseMainTaxes}");
             }
+            Console.WriteLine("------------\n");
             foreach (var e in TaxRateEntityList) {
-                Console.WriteLine($"{e.Id} {e.Legislation} {e.Name} {e.RegionForTaxes} {e.TaxTreatment} {e.TaxItemType} {e.TaxCode} {e.Rate}");
+                Console.WriteLine($"{e.Id} {e.Legislation} {e.Name} {e.RegionForTaxes} {e.TaxTreatment} {e.TaxItemType} {e.TaxCode} {e.Rate} {e.RegionForTaxesId} {e.TaxTreatmentId} {e.TaxItemTypeId} {e.TaxCodeId}");
             }
+            Console.WriteLine("------------\n");
             foreach (var e in TaxTreatmentEntityList) {
-                Console.WriteLine($"{e.Id} {e.Legislation} {e.TaxTreatment} {e.RegionForTaxes} {e.UseFromTaxes}");
+                Console.WriteLine($"{e.Id} {e.Legislation} {e.TaxTreatment} {e.RegionForTaxes} {e.UseFromTaxes} {e.RegionForTaxesId}");
             }
+            Console.WriteLine("------------\n");
+        }
+
+        private static void Repository() {
+            List<People> people = new List<People>() {
+                new People{ Id = 1, Name =  "IRIA" },
+                new People{ Id = 2, Name =  "NIL" },
+                new People{ Id = 3, Name =  "LUCA" },
+            };
+
+            List<Furniture> furnitures = new List<Furniture>() {
+                new Furniture{ Id = 1, Name =  "CHAIR", Price = 1.23 },
+                new Furniture{ Id = 2, Name =  "DESKTOP", Price= 4.5 },
+                new Furniture{ Id = 3, Name =  "TABLE", Price = 15.15 },
+                new Furniture{ Id = 4, Name =  "CUPBOARD", Price = 0.45 },
+            };
+
+            IRepository<People> repoPeople = new Repository<People>(people);
+            IRepository<Furniture> repoFurniture = new Repository<Furniture>(furnitures);
+
+            people.Add(new People { Id = 4, Name = "MURIEL" });
+            people.Add(new People { Id = 5, Name = "ARNAUD" });
+
+            Console.WriteLine($"{repoPeople.FindById(1)}");
+            Console.WriteLine($"{repoPeople.FindById(2)}");
+            Console.WriteLine($"{repoPeople.FindById(3)}");
+            Console.WriteLine("------------\n");
+            foreach(var p in repoPeople.All())
+                Console.WriteLine($"{p}");
+            Console.WriteLine("------------\n");
+            Console.WriteLine("------------\n");
+            foreach (var f in repoFurniture.All())
+                Console.WriteLine($"{f}");
         }
     }
 }

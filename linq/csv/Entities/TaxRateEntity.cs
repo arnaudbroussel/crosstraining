@@ -10,5 +10,9 @@ namespace crosstraining.linq.csv.Entities {
         public string TaxItemType { get; set; }
         public string TaxCode { get; set; }
         public double Rate { get; set; }
+        public Guid? RegionForTaxesId { get; set; }
+        public Guid? TaxTreatmentId { get; set; }
+        public Guid? TaxItemTypeId { get; set; }
+        public Guid? TaxCodeId { get; set; }
     }
 }

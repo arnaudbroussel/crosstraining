@@ -1,15 +1,15 @@
 ID,Legislation,Name,RegionForTaxes,Tax Treatment,Tax Item Type,Tax Code,Rate
-9ceb6254-91d4-4a49-8a3b-17a1cebb6961,CA,GST Sales in Alberta,Alberta,Sales,Goods,Taxable,5
-113bdd93-c5db-415f-82b5-7f56a10d7e3b,CA,GST for sales in Quebec,Quebec,Sales,Goods,Taxable,7.5
-03d4787c-1692-4b9c-9430-dfe6ff66f169,CA,QST for sales in Quebec,Quebec,Sales,Goods,Taxable,5
-d862b307-f2d4-4ec3-846f-74cda2e2ac45,ES,Ventas Bienes y Servicios IVA Normal a TC,TC,Ventas Bienes y Servicios,Goods,IVA Normal,21
-1e47839c-7b13-4144-bafe-e26440908820,ES,Ventas Bienes y Servicios IVA Normal a Canarias,TC,Ventas Bienes y Servicios a Canarias,Goods,IVA Normal,0
-51477ac3-a55b-441c-a9c0-60ca81016280,ES,Ventas Bienes y Servicios IGIC Normal a Peninsula,Canarias,Ventas Bienes y Servicios a Peninsula(IGIC),Goods,IGIC Normal,0
-4714506f-e62b-4fdc-987f-b1d0c7520a51,ES,Ventas Bienes y Servicios IGIC Normal a Canarias,Canarias,Ventas Bienes y Servicios (IGIC),Goods,IGIC Normal,15
-f8f5f060-7243-4697-a642-6b422a99cf19,ES,Compras de Bienes a TC (IGIC),Canarias,Compras de Bienes a Peninsula,Goods,Standard Rate,0
-95432265-e8f7-4e29-b365-8eb4613714c6,ES,Compras de Bienes en Canarias (IGIC),Canarias,Compras de Bienes en Canarias (IGIC),Goods,Standard Rate,15
-736fbf47-1380-4d4c-80af-7d2ce2ba6ddc,ES,Compras de Bienes TC,TC,Compras de Bienes TC,Goods,Standard Rate,21
-9f9ffc1f-58cf-4f6e-9c4c-61e1059c8aa4,ES,Compras de Bienes a Canarias,TC,Compras de Bienes a Canarias,Goods,Standard Rate,0
-0a119dff-3ab2-4f2d-a92c-ef6549c2c913,CA,Purchases in Alberta,Alberta,Purchases,Goods,Taxable,5
-1f63ad30-25d9-4471-852a-a4128138f745,UK,Sales of Goods to UK at Standard rate,,Sales to UK,Goods,Standard Rate,20
-c7bc544c-7d88-4423-88f8-b11f4156b864,UK,Sales of Goods to ROW at Standard rate,,Sales to ROW,Goods,Standard Rate,0
+1,CA,GST Sales in Alberta,Alberta,Sales,Goods,Taxable,5
+2,CA,GST for sales in Quebec,Quebec,Sales,Goods,Taxable,7.5
+3,CA,QST for sales in Quebec,Quebec,Sales,Goods,Taxable,5
+4,ES,Ventas Bienes y Servicios IVA Normal a TC,TC,Ventas Bienes y Servicios,Goods,IVA Normal,21
+5,ES,Ventas Bienes y Servicios IVA Normal a Canarias,TC,Ventas Bienes y Servicios a Canarias,Goods,IVA Normal,0
+6,ES,Ventas Bienes y Servicios IGIC Normal a Peninsula,Canarias,Ventas Bienes y Servicios a Peninsula(IGIC),Goods,IGIC Normal,0
+7,ES,Ventas Bienes y Servicios IGIC Normal a Canarias,Canarias,Ventas Bienes y Servicios (IGIC),Goods,IGIC Normal,15
+8,ES,Compras de Bienes a TC (IGIC),Canarias,Compras de Bienes a Peninsula,Goods,Standard Rate,0
+9,ES,Compras de Bienes en Canarias (IGIC),Canarias,Compras de Bienes en Canarias (IGIC),Goods,Standard Rate,15
+10,ES,Compras de Bienes TC,TC,Compras de Bienes TC,Goods,Standard Rate,21
+11,ES,Compras de Bienes a Canarias,TC,Compras de Bienes a Canarias,Goods,Standard Rate,0
+12,CA,Purchases in Alberta,Alberta,Purchases,Goods,Taxable,5
+13,UK,Sales of Goods to UK at Standard rate,,Sales to UK,Goods,Standard Rate,20
+14,UK,Sales of Goods to ROW at Standard rate,,Sales to ROW,Goods,Standard Rate,0

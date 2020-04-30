@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace crosstraining.linq.csv.Entities.Extensions {
     public static class RegionForTaxesEntityExtension {
@@ -7,6 +8,7 @@ namespace crosstraining.linq.csv.Entities.Extensions {
                 var columns = item.Split(',');
 
                 yield return new RegionForTaxesEntity {
+                    Id = Guid.NewGuid(),
                     Legislation = columns[0],
                     Name = columns[1],
                     IsTheMainRegion = (columns[2] == "No"),
