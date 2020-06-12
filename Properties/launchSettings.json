@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "crosstraining": {
+      "commandName": "Project",
+      "commandLineArgs": "-size 1 -operations tax-group-delete"
+    }
+  }
+}

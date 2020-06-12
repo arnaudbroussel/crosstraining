@@ -1,21 +1,97 @@
 ﻿namespace crosstraining {
     using crosstraining.events;
     using crosstraining.hierarchy;
+    using crosstraining.inheritance.comparer;
     using crosstraining.inheritance.genericinterface;
     using crosstraining.inheritance.useinterface;
     using crosstraining.linq.csv;
     using crosstraining.linq.csv.Entities;
+    using crosstraining.reflection;
     using System;
     using System.Collections.Generic;
+    using System.Linq;
+    using System.Reflection;
+    using System.Text.RegularExpressions;
 
     class Program {
+        private static Dictionary<string, object> commandArgs = new Dictionary<string, object> {
+                { "-threads", 1},
+                { "-runtime", 1},
+                { "-size", null},
+                { "-operations", new List<string>()}
+            };
+
+        private static string[] availableOperations = new string[] {
+            "tax-code-create", "tax-code-getbyid", "tax-code-getall", "tax-code-update", "tax-code-delete",
+            "tax-group-create", "tax-group-getbyid", "tax-group-getall", "tax-group-update", "tax-group-delete",
+        };
+
         static void Main(string[] args) {
+            //PrintListToString();
+            //GetArguments(args);
             //UseGenericInterfaces();
             //UseInterfaces();
             //EventsAndHandlers();
             //ActionsOfSomething();
             //LinqCSV();
-            Repository();
+            //Repository();
+            //Comparer();
+            //Pagination();
+            UsingReflection();
+        }
+
+        private static bool GetArguments(string[] args) {
+            if (args.Contains("-h") || args.Contains("-help"))
+                return PrintUsage(availableOperations);
+
+            List<string> operations = (List<string>) commandArgs["-operations"];
+            string currentArg = string.Empty;
+            foreach (string arg in args) {
+                if (arg.StartsWith('-')) {
+                    if (!commandArgs.ContainsKey(arg)) {
+                        return PrintArgumentError($"The argument {arg} is not valid.");
+                    }
+                    currentArg = arg;
+                }
+                else {
+                    if (currentArg != "-operations") {
+                        if (Int32.TryParse(arg, out int toIntValue)) {
+                            commandArgs[currentArg] = toIntValue;
+                        }
+                        else {
+                            return PrintArgumentError($"The value {arg} is not valid for the parameter {currentArg}.");
+                        }
+                    }
+                    else {
+                        if (availableOperations.Contains(arg))
+                            operations.Add(arg);
+                        else
+                            return PrintArgumentError($"The operation {arg} is not available. See documentation with -help.");
+                    }
+                }
+            }
+            if (commandArgs["-size"] == null)
+                return PrintArgumentError($"The -size paramater is required.");
+            if (operations.Count > 0)
+                return true;
+            else
+                return PrintArgumentError($"No operation requested.");
+        }
+
+        private static bool PrintArgumentError(string message) {
+            Console.WriteLine(message);
+            return false;
+        }
+
+        private static bool PrintUsage(string[] availableOperations) {
+            Console.WriteLine("Valid arguments:");
+            foreach (string key in commandArgs.Keys)
+                Console.WriteLine($"\t{key}");
+            Console.WriteLine("\r\nAvailable operations:");
+            foreach (string availableOperation in availableOperations)
+                Console.WriteLine($"\t{availableOperation}");
+
+            return false;
         }
 
         private static void UseGenericInterfaces() {
@@ -23,6 +99,22 @@
             var computer = factory.Get();
             Console.WriteLine(computer.GetType());
             Console.WriteLine(computer.Clone().GetType());
+        }
+
+        private static void PrintListToString() {
+            var names = new List<string>() { "John", "Anna", "Monica" };
+            var joinedNames = names.Aggregate((a, b) => a + ", " + b);
+            Console.WriteLine($"joinedNames = {joinedNames}");
+            Console.WriteLine($"availableOperations = {availableOperations}");
+
+            string strRegex = @"[ ](?=(?:[^""]*""[^""]*"")*[^""]*$)";
+            Regex myRegex = new Regex(strRegex, RegexOptions.Multiline);
+            string strTargetString = @"-size 100 -operations tax-treatment-create tax-treatment-update tax-treatment-get-all tax-treatment-get-by-id -runtime 1 -name ""Tax Treatment -Thread number = 1"" -threads 1";
+
+            var s = myRegex.Split(strTargetString);
+            foreach (var item in s) {
+                Console.WriteLine(item.ToString().Replace("\"",""));
+            }
         }
 
         private static void UseInterfaces() {
@@ -47,6 +139,7 @@
             a.OnMultipleOfTenReached += ThingsToDo.ProcessMultipleOfTenReached;
             // anonymous (no need to refer to a method to be executed with parameters)
             a.OnMultipleOfTenReached += (s, e) => ThingsToDo.ProcessSourceLambda(e, "TEN");
+            a.OnMultipleOfTenReached += (s, e) => ThingsToDo.ProcessSourceLambda("MARK LANEGAN");
 
             // below several examples to attach an action to be performed on an event:
             // (actually here, 1 event raises several actions)
@@ -140,12 +233,88 @@
             Console.WriteLine($"{repoPeople.FindById(2)}");
             Console.WriteLine($"{repoPeople.FindById(3)}");
             Console.WriteLine("------------\n");
-            foreach(var p in repoPeople.All())
+            foreach (var p in repoPeople.All())
                 Console.WriteLine($"{p}");
             Console.WriteLine("------------\n");
             Console.WriteLine("------------\n");
             foreach (var f in repoFurniture.All())
                 Console.WriteLine($"{f}");
+        }
+
+        private static void Comparer() {
+            CompareBag compareBag = new CompareBag();
+            compareBag.OrderStringList();
+            Console.WriteLine("------------\n");
+            compareBag.OrderObjectList();
+        }
+
+        public struct Pagined {
+            public int pages;
+            public int last;
+            public int max;
+
+            public int steps(int i) {
+                if (i < (pages - 1) && pages != 1)
+                    return max;
+                else if (i > pages)
+                    return 0;
+                else {
+                    return last;
+                }
+            }
+        }
+                                                               
+        private static Pagined Pages(int max, int size) {
+            Pagined s = new Pagined();
+
+            s.pages = 1;
+            s.last = size;
+            s.max = max;
+
+            if (size > max)
+                s.pages = (size / max) + ((size % max) > 0 ? 1 : 0);
+
+            if (s.pages != 1) {
+                s.last = (size % max);
+            }
+
+            return s;
+        }
+
+        private static void Pagination() {
+            Pagined s = Pages(1000, 3125);            
+            for (int i = 0; i < s.pages; i++)
+                Console.WriteLine(i + " > " + s.steps(i));
+            Console.WriteLine("-----");
+
+            s = Pages(1000, 999);
+            for (int i = 0; i < s.pages; i++)
+                Console.WriteLine(i + " > " + s.steps(i));
+            Console.WriteLine("-----");
+
+            s = Pages(1000, 3001);
+            for (int i = 0; i < s.pages; i++)
+                Console.WriteLine(i + " > " + s.steps(i));
+            Console.WriteLine("-----");
+        }
+
+        private static void UsingReflection() {
+            Furniture furniture = new Furniture { Id = 1, Name = "CHAIR", Price = 1.23 };
+            Console.WriteLine("Ex 1 Dump an object:");
+            WorkWithReflection.DumpObject(furniture);
+            Console.WriteLine();
+
+            Console.WriteLine("Ex 2 Invoke methods:");
+            WorkWithReflection.InvokeMethods(furniture);
+            Console.WriteLine();
+
+            List<Employee> employees = new List<Employee>() {
+                new Employee() { Name = "Lou", Category = 12},
+                new Employee() { Name = "Wayne", Category = 8},
+            };
+            Console.WriteLine("Ex 3 Invoke other methods:");
+            WorkWithReflection.InvokeMethodNoArgument(employees[0], employees[1], "CompareTo", typeof(Employee));
+            Console.WriteLine();
         }
     }
 }
