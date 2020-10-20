@@ -1,4 +1,5 @@
-﻿using System;
+﻿using crosstraining.reflection;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -9,6 +10,8 @@ namespace crosstraining.hierarchy {
             this.HiddenInt = 500;
             this.OtherHiddenInt = 951;
             this.VisibleInt = 499;
+
+            Console.WriteLine(WorkWithReflection.GetCurrentMethod());
         }
 
         public int Id { get; set; }

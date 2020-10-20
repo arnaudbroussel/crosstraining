@@ -7,10 +7,11 @@
     using crosstraining.linq.csv;
     using crosstraining.linq.csv.Entities;
     using crosstraining.reflection;
+    using crosstraining.SerializeDeserialize;
+    ////using SBC.Accounting.Tax.Service.PerformanceTesting.Setup;
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Reflection;
     using System.Text.RegularExpressions;
 
     class Program {
@@ -27,6 +28,7 @@
         };
 
         static void Main(string[] args) {
+            //GeneratedGuids();
             //PrintListToString();
             //GetArguments(args);
             //UseGenericInterfaces();
@@ -37,7 +39,9 @@
             //Repository();
             //Comparer();
             //Pagination();
-            UsingReflection();
+            //UsingReflection();
+            //SetupDatabase();
+            SerializeDeserialize();
         }
 
         private static bool GetArguments(string[] args) {
@@ -113,17 +117,22 @@
 
             var s = myRegex.Split(strTargetString);
             foreach (var item in s) {
-                Console.WriteLine(item.ToString().Replace("\"",""));
+                Console.WriteLine(item.ToString().Replace("\"", ""));
             }
         }
 
         private static void UseInterfaces() {
+            IAnimal animal2 = new Dog();
             IAnimal animal = new Dog();
             animal.Move();
             Dog dog = (Dog) animal;
             dog.Bark();
             MoveAnimal(animal);
             MoveAnimal(dog);
+
+            Console.WriteLine(animal2.GetHashCode());
+            Console.WriteLine(animal.GetHashCode());
+            Console.WriteLine(dog.GetHashCode());
         }
 
         private static void MoveAnimal(IAnimal animal) {
@@ -263,7 +272,7 @@
                 }
             }
         }
-                                                               
+
         private static Pagined Pages(int max, int size) {
             Pagined s = new Pagined();
 
@@ -282,7 +291,7 @@
         }
 
         private static void Pagination() {
-            Pagined s = Pages(1000, 3125);            
+            Pagined s = Pages(1000, 3125);
             for (int i = 0; i < s.pages; i++)
                 Console.WriteLine(i + " > " + s.steps(i));
             Console.WriteLine("-----");
@@ -299,6 +308,8 @@
         }
 
         private static void UsingReflection() {
+            Console.WriteLine(WorkWithReflection.GetCurrentMethod());
+
             Furniture furniture = new Furniture { Id = 1, Name = "CHAIR", Price = 1.23 };
             Console.WriteLine("Ex 1 Dump an object:");
             WorkWithReflection.DumpObject(furniture);
@@ -315,6 +326,32 @@
             Console.WriteLine("Ex 3 Invoke other methods:");
             WorkWithReflection.InvokeMethodNoArgument(employees[0], employees[1], "CompareTo", typeof(Employee));
             Console.WriteLine();
+
+            WorkWithReflection.CompanyTestAttribute();
+
+            WorkWithReflection.GetFolderClasses();
+        }
+
+        private static void GeneratedGuids() {
+            for (int i = 0; i < 8000; i++) {
+                Console.WriteLine($"\"{Guid.NewGuid()}\",");
+            }
+        }
+
+        private static void SetupDatabase() {
+            for (int i = 0; i < 500; i++) {
+                Console.WriteLine($"\"{Guid.NewGuid()}\",");
+            }
+
+            ////Setup.SetupDatabase().Wait();
+        }
+
+        private static readonly Func<int, int, int> InsertTemplatePages = (numberOfTemplates, numberOfQueriesAtOnce) => (int) Math.Ceiling(((double) numberOfTemplates / numberOfQueriesAtOnce));
+
+        private static void SerializeDeserialize() {
+            ////WorkWithSerialize.SerializeObjectAndRestoreFromXML();
+            ////JsonNet.Serialize();
+            JsonNet.SerializePerformanceTesting();
         }
     }
 }
