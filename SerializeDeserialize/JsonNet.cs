@@ -27,29 +27,32 @@ namespace crosstraining.SerializeDeserialize {
                 teams.Add(WorkWithSerialize.MakeOneTeam());
             }
 
-            var startTime = DateTime.Now;
+            System.Diagnostics.Stopwatch watch = new System.Diagnostics.Stopwatch();
+            watch.Start();
             var newtonsoft = Newtonsoft.Json.JsonConvert.SerializeObject(teams);
-            Console.WriteLine(String.Format("Serialize Newtonsoft {0} ms", (int) (DateTime.Now - startTime).TotalMilliseconds));
+            Console.WriteLine($"Serialize Newtonsoft {watch.ElapsedMilliseconds} ms");
 
-            startTime = DateTime.Now;
+            watch.Restart();
             Newtonsoft.Json.JsonConvert.SerializeObject(teams, Newtonsoft.Json.Formatting.Indented);
-            Console.WriteLine(String.Format("Serialize Newtonsoft {0} ms (pretty json)", (int) (DateTime.Now - startTime).TotalMilliseconds));
+            Console.WriteLine($"Serialize Newtonsoft {watch.ElapsedMilliseconds} ms (pretty json)");
 
-            startTime = DateTime.Now;
+            watch.Restart();
             var netCore = System.Text.Json.JsonSerializer.Serialize(teams);
-            Console.WriteLine(String.Format("Serialize System.Text.Json {0} ms", (int) (DateTime.Now - startTime).TotalMilliseconds));
+            Console.WriteLine($"Serialize System.Text.Json {watch.ElapsedMilliseconds} ms");
 
-            startTime = DateTime.Now;
+            watch.Restart();
             System.Text.Json.JsonSerializer.Serialize(teams, options);
-            Console.WriteLine(String.Format("Serialize System.Text.Json {0} ms (pretty json)", (int) (DateTime.Now - startTime).TotalMilliseconds));
+            Console.WriteLine($"Serialize System.Text.Json {watch.ElapsedMilliseconds} ms (pretty json)");
 
-            startTime = DateTime.Now;
+            watch.Restart();
             List<Team> teamsNetCore = System.Text.Json.JsonSerializer.Deserialize<List<Team>>(netCore);
-            Console.WriteLine(String.Format("Deserialize System.Text.Json {0} ms", (int) (DateTime.Now - startTime).TotalMilliseconds));
-            
-            startTime = DateTime.Now;
+            Console.WriteLine($"Deserialize System.Text.Json {watch.ElapsedMilliseconds} ms");
+
+            watch.Restart();
             List<Team> teamsNewtonsoft = Newtonsoft.Json.JsonConvert.DeserializeObject<List<Team>>(newtonsoft);
-            Console.WriteLine(String.Format("Deserialize Newtonsoft {0} ms", (int) (DateTime.Now - startTime).TotalMilliseconds));
+            Console.WriteLine($"Deserialize Newtonsoft {watch.ElapsedMilliseconds} ms");
+
+            watch.Stop();
         }
     }
 }
