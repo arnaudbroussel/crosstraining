@@ -6,6 +6,7 @@
     using crosstraining.inheritance.useinterface;
     using crosstraining.linq.csv;
     using crosstraining.linq.csv.Entities;
+    using crosstraining.Network;
     using crosstraining.reflection;
     using crosstraining.SerializeDeserialize;
     ////using SBC.Accounting.Tax.Service.PerformanceTesting.Setup;
@@ -27,6 +28,8 @@
             "tax-group-create", "tax-group-getbyid", "tax-group-getall", "tax-group-update", "tax-group-delete",
         };
 
+        private static bool showDefault;
+
         static void Main(string[] args) {
             //GeneratedGuids();
             //PrintListToString();
@@ -42,6 +45,8 @@
             //UsingReflection();
             //SetupDatabase();
             SerializeDeserialize();
+            //Misc();
+            //IPTools();
         }
 
         private static bool GetArguments(string[] args) {
@@ -351,7 +356,25 @@
         private static void SerializeDeserialize() {
             ////WorkWithSerialize.SerializeObjectAndRestoreFromXML();
             ////JsonNet.Serialize();
-            JsonNet.SerializePerformanceTesting();
+            ////JsonNet.SerializePerformanceTesting();
+            DeserializeStringJson.DoTheThing();
+        }
+
+        private static void Misc() {
+            Stack<char> pile = new Stack<char>();
+            pile.Push('A');
+            pile.Push('B');
+            pile.Push('C');
+            Console.WriteLine(pile.ToArray()[0]);
+            Console.WriteLine(pile.ToArray()[1]);
+            Console.WriteLine(pile.ToArray()[2]);
+            
+            Console.WriteLine(showDefault);
+        }
+
+        private static void IPTools() {
+            var iptools = new IPTools();
+            iptools.GetIP();
         }
     }
 }
