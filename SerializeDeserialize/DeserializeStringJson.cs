@@ -1,5 +1,5 @@
 ﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
+using System.Collections.Generic;
 
 namespace crosstraining.SerializeDeserialize {
     public class DeserializeStringJson {
@@ -10,6 +10,14 @@ namespace crosstraining.SerializeDeserialize {
 
             string jsonStringUrl = "{\"$navigateToUrl\": \"https://test-api.service.hmrc.gov.uk/oauth/authorize?response_type=code&client_id=lSlExyGJ4eAuB4bbmVD2zmMyJhUa&scope=write%3Avat+read%3Avat&state=Gm5JtPYQEUigIOuhu9gctg&redirect_uri=https%3A%2F%2Flzhozjlorh.execute-api.eu-west-2.amazonaws.com%2Fdev%2Foauth%2Fcallback\"}";
             NavigateUrl contentRul = JsonConvert.DeserializeObject<NavigateUrl>(jsonStringUrl);
+
+            string jsonStringResponse = "{\"headers\": \"{}\", \"statusCode\": \"HMRC.StatusCode\", \"payload\":[{\"start\": \"01/02/03\",\"end\": \"04/05/06\", \"status\": \"O\",\"periodKey\": \"AZERTY\",\"received\": \"17/02/19\"},{\"start\": \"01/02/03\",\"end\": \"04/05/06\", \"status\": \"F\",\"periodKey\": \"QWERTY\",\"received\": \"17/02/19\"},{\"start\": \"01/02/03\",\"end\": \"04/05/06\", \"status\": \"F\",\"periodKey\": \"OTRO MAS\",\"received\": \"17/02/19\"}]}";
+            Obligation obligation = JsonConvert.DeserializeObject<Obligation>(jsonStringResponse);
+
+            var obligationToStr = JsonConvert.SerializeObject(obligation);
+
+            string jsonStringResponsePay = "{\"headers\": {},\"statusCode\": \"HMRC.StatusCode\",\"payload\": [	{\"payments\": {\"amount\": 12.1,\"received\": \"yyyy-mm-dd\"}},{\"payments\": {\"amount\": 45.12,\"received\": \"yyyy-mm-dd\"}}]}";
+            Payment payment = JsonConvert.DeserializeObject<Payment>(jsonStringResponsePay);
         }
     }
 }
