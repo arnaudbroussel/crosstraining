@@ -9,6 +9,7 @@
     using crosstraining.Network;
     using crosstraining.reflection;
     using crosstraining.SerializeDeserialize;
+    using crosstraining.singleton;
     ////using SBC.Accounting.Tax.Service.PerformanceTesting.Setup;
     using System;
     using System.Collections.Generic;
@@ -47,6 +48,7 @@
             SerializeDeserialize();
             //Misc();
             //IPTools();
+            //Singleton();
         }
 
         private static bool GetArguments(string[] args) {
@@ -375,6 +377,13 @@
         private static void IPTools() {
             var iptools = new IPTools();
             iptools.GetIP();
+        }
+
+        private static void Singleton() {
+            RegulatoryReportingClient.SendAsync();
+            //for (int i = 0; i < 100000; i++) {
+            //    RegulatoryReportingClient.SendAsync();
+            //}
         }
     }
 }

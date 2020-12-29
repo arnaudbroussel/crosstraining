@@ -7,7 +7,7 @@ using System.Text.Json.Serialization;
 namespace crosstraining.SerializeDeserialize {
 
     public class PaymentItem {
-        [JsonProperty(PropertyName = "payments")]
+        [JsonProperty(PropertyName = "payload/payments")]
         public PaymentItemData paymentItemData { get; set; }
     }
 }
