@@ -359,7 +359,7 @@
             ////WorkWithSerialize.SerializeObjectAndRestoreFromXML();
             ////JsonNet.Serialize();
             ////JsonNet.SerializePerformanceTesting();
-            DeserializeStringJson.DoTheThing();
+            DeserializeStringJson.DoTheThingAsync();
         }
 
         private static void Misc() {

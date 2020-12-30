@@ -1,11 +1,18 @@
-﻿using Newtonsoft.Json;
+﻿using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using System.Collections.Generic;
 using System.Linq;
+using System.Net;
+using System.Net.Http;
+using System.Text;
+using System.Web.Http;
+////using System.Web.Http.Results;
 
 namespace crosstraining.SerializeDeserialize {
     public class DeserializeStringJson {
 
-        public static void DoTheThing() {
+        public static async System.Threading.Tasks.Task DoTheThingAsync() {
             string jsonString = "{\"$tracking\": {\"$phase\": \"Submiting VAT return\",\"$phaseDetail\": \"Connecting to HMRC\",\"$pollingMillis\": 500}}";
             TrackingData content = JsonConvert.DeserializeObject<TrackingData>(jsonString);
 
@@ -30,13 +37,42 @@ namespace crosstraining.SerializeDeserialize {
             var resultsObject = (JObject) JsonConvert.DeserializeObject(results);
             var payload = resultsObject["payload"].ToString();
             var payloadObject = (JArray) JsonConvert.DeserializeObject(payload);
-            var l = payloadObject.Select(item => new ObligationItem() { 
-                StartDate = (string)item["start"],
-                EndDate = (string) item["end"],
-                DueDate = (string) item["due"],
-                PeriodKey = (string) item["periodkey"],
-                ReceivedDate = (string) item["received"]
-            }).ToList();
+            var listOfItems = JsonConvert.DeserializeObject<List<ObligationItem>>(payloadObject.ToString());
+            var listOfItemsStr = JsonConvert.SerializeObject(listOfItems);
+
+            var message = new HttpResponseMessage();
+            message.Headers.Add("Retry-After", 12345.ToString());
+            message.Headers.Add("X-Task-Id", "abcde0123");            
+            message.Headers.Add("Location", "www.sage.com");
+            message.Content = new StringContent(listOfItemsStr, Encoding.UTF8, "application/json");
+            message.StatusCode = HttpStatusCode.Accepted;
+
+            ////message.Headers.Location = new System.Uri("www.sage.com");
+
+            ////var messageString = await message.Content.ReadAsStringAsync();
+
+            ////var response = new ContentResult();
+            ////response.Content = messageString;
+            ////response.StatusCode = (int) HttpStatusCode.Accepted;
+
+
+            ////var r = new ObjectResult(new StringContent(listOfItemsStr, Encoding.UTF8, "application/json")) {
+            ////    StatusCode = 202
+            ////};
+
+            var r = GetActionResult(message);
+
+            var z = await r.Response.Content.ReadAsStringAsync();
+
+            IEnumerable<string> values;
+            var zz = r.Response.Headers.TryGetValues("XXXLocation", out values);
+
+            IEnumerable<string> valuesOK;
+            var zzz = r.Response.Headers.TryGetValues("Location", out valuesOK);
+        }
+
+        private static IActionResult GetActionResult(HttpResponseMessage message) {
+            return new ResponseMessageResult(message);
         }
     }
 }
