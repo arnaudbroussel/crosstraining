@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 
 namespace crosstraining.SerializeDeserialize {
     [Serializable]
@@ -10,6 +11,8 @@ namespace crosstraining.SerializeDeserialize {
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public int Age { get; set; }
+        
+        [JsonProperty(PropertyName = "$autocode")]
         protected string AutomaticCode { get; set; }
     }
 }

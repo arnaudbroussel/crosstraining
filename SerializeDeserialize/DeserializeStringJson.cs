@@ -10,7 +10,15 @@ using System.Web.Http;
 ////using System.Web.Http.Results;
 
 namespace crosstraining.SerializeDeserialize {
+
     public class DeserializeStringJson {
+
+        public static void NavigationUrl() {
+            ////var content = "{\"$results\":{\"payload\":{\"$navigateToUrl\": \"ABC\"}}}";
+            var content = "{\"payload\":{\"$navigateToUrl\": \"ABC\"}}";
+            var jObject = JObject.Parse(content);
+            var navigateToUrl = jObject.SelectToken("$navigateToUrl").ToObject<string>();
+        }
 
         public static async System.Threading.Tasks.Task DoTheThingAsync() {
             string jsonString = "{\"$tracking\": {\"$phase\": \"Submiting VAT return\",\"$phaseDetail\": \"Connecting to HMRC\",\"$pollingMillis\": 500}}";
@@ -46,29 +54,6 @@ namespace crosstraining.SerializeDeserialize {
             message.Headers.Add("Location", "www.sage.com");
             message.Content = new StringContent(listOfItemsStr, Encoding.UTF8, "application/json");
             message.StatusCode = HttpStatusCode.Accepted;
-
-            ////message.Headers.Location = new System.Uri("www.sage.com");
-
-            ////var messageString = await message.Content.ReadAsStringAsync();
-
-            ////var response = new ContentResult();
-            ////response.Content = messageString;
-            ////response.StatusCode = (int) HttpStatusCode.Accepted;
-
-
-            ////var r = new ObjectResult(new StringContent(listOfItemsStr, Encoding.UTF8, "application/json")) {
-            ////    StatusCode = 202
-            ////};
-
-            var r = GetActionResult(message);
-
-            var z = await r.Response.Content.ReadAsStringAsync();
-
-            IEnumerable<string> values;
-            var zz = r.Response.Headers.TryGetValues("XXXLocation", out values);
-
-            IEnumerable<string> valuesOK;
-            var zzz = r.Response.Headers.TryGetValues("Location", out valuesOK);
         }
 
         private static IActionResult GetActionResult(HttpResponseMessage message) {
