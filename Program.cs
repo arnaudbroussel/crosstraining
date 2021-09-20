@@ -6,6 +6,7 @@
     using crosstraining.inheritance.useinterface;
     using crosstraining.linq.csv;
     using crosstraining.linq.csv.Entities;
+    using crosstraining.MD5;
     using crosstraining.Network;
     using crosstraining.reflection;
     using crosstraining.SerializeDeserialize;
@@ -51,7 +52,33 @@
             //IPTools();
             //Singleton();
             //ToDate();
-            GuidToBinary();
+            //GuidToBinary();
+            ////DisplayDuration();
+            ////ReadDataFileFromEmbeddedDataDirectory();
+            ////DisplayArgsToString();
+            ////TooLongUrl();
+            ////ToDateFromLong();
+            ToMD5();
+        }
+
+        private static void ToDateFromLong() {
+            ////var d = 1622715039701;
+
+            ////System.DateTime dtDateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, System.DateTimeKind.Utc);
+            ////dtDateTime = dtDateTime.AddSeconds(d).ToLocalTime();
+
+            ////Console.WriteLine(dtDateTime);
+
+            ////var nowIs = DateTime.Ticks;
+            ////var nowIs = DateTime.Now.Ticks;
+            ////var now24 = DateTime.Now.AddHours(-24).Ticks;
+
+            ////Console.WriteLine(nowIs);
+            ////Console.WriteLine(now24);
+            ////Console.WriteLine(nowIs-now24);
+
+            Console.WriteLine(DateTimeOffset.UtcNow.ToUnixTimeSeconds());
+            Console.WriteLine(DateTime.UtcNow);
         }
 
         private static bool GetArguments(string[] args) {
@@ -396,30 +423,26 @@
             DateTime start = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
             DateTime date = start.AddMilliseconds(unixDate).ToLocalTime();
             Console.WriteLine(date);
-        }                                              
+        }
 
-        private static string GetFeatures(List<Guid> guids) {
+        private static List<object> GetFeatures(List<Guid> guids) {
             if (!guids.Any())
-                return string.Empty;
+                return new List<object>();
 
             var sb = new StringBuilder();
 
             foreach (var guid in guids) {
-                var bytes = guid.ToByteArray();
-
-                sb.Append("0x");
-
-                foreach (var byt in bytes)
-                    sb.Append($"{byt:X2}");
-
-                sb.Append(",");
+                sb.Append("0x").Append(string.Join(string.Empty, guid.ToByteArray().Select(r => $"{r:X2}"))).Append(',');
             }
 
-            return sb.ToString().ToLower().Remove(sb.Length - 1);
+            return new List<object> {
+                sb.ToString().ToLower().Remove(sb.Length - 1)
+            };
         }
 
         private static void GuidToBinary() {
             var guids = new List<Guid> {
+                Guid.Parse("c8eaa996-28fd-442e-b2f2-2988124bedcb"),
                 Guid.Parse("ef0a1600-97cd-1d16-dad5-1378d1457e32"),
                 Guid.Parse("fb6a5401-484d-cd66-44ad-b44e242f5ee3"),
                 Guid.Parse("73cadb03-ff92-2692-e21e-c66925872a71"),
@@ -564,7 +587,88 @@
                 Guid.Parse("e67284ff-0c8e-54aa-5257-2a7a8b628a94")
             };
 
-            Console.WriteLine(GetFeatures(guids));
+            Console.WriteLine(GetFeatures(guids)[0]);
+        }
+
+        private static void DisplayDuration() {
+            ////DateTime d1 = DateTime.Now;
+            ////DateTime d2 = DateTime.Now.AddDays(-1);
+
+            ////TimeSpan t = d1 - d2;
+            ////double NrOfDays = t.TotalDays;
+
+            ////Console.WriteLine(NrOfDays);
+            ////Console.WriteLine(t.TotalMilliseconds);
+            ////Console.WriteLine(TimeSpan.FromMilliseconds(t.TotalMilliseconds).TotalMinutes);
+            ////Console.WriteLine(TimeSpan.FromMilliseconds(t.TotalMilliseconds).TotalMinutes.ToString("HH:mm:ss"));
+
+            DateTime a = new DateTime(2010, 05, 12, 13, 15, 36);
+            DateTime b = new DateTime(2010, 05, 12, 14, 45, 35);
+
+            Console.WriteLine(b.Subtract(a).TotalMinutes + ":" + b.Subtract(a).TotalSeconds);
+            Console.WriteLine(Math.Round((b - a).TotalMinutes, 2));
+
+            ////TimeSpan ts = TimeSpan.FromMinutes(62.8);
+            TimeSpan ts = (b-a);
+            string output = string.Format("{0}:{1}",
+                 // Display the total minutes, throwing away the fractional portion.
+                 (int) ts.TotalMinutes,
+                 // Display the seconds component (0-59) as two digits with a leading
+                 // zero if necessary.
+                 ts.Seconds.ToString("D2"));
+            Console.WriteLine(output);
+        }
+
+        private static void ReadDataFileFromEmbeddedDataDirectory() {
+            Console.WriteLine(Guid.Parse("SBC.Tax.Code.Max"));
+            string folder = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+            Console.WriteLine(folder);
+        }
+
+        private static void DisplayArgsToString() {
+            ////object[] args = { "1", "Server = localhost; User Id = root; GuidFormat = LittleEndianBinary16; Connection Timeout = 1; Connection Lifetime = 1800; Connection Idle Timeout = 300; Minimum Pool Size = 3; Default Command Timeout = 1; Use Affected Rows = True; Connection Reset = True; CancellationTimeout = 1" };
+            object[] args = {};
+            var message = "Pool{0} creating new connection pool for ConnectionString: {1}";
+
+            for (int i = 0; i < args.Length; i++) {
+                message = message.Replace("{"+i+"}", args[i].ToString());
+            }
+            ////message = message.Replace("{0}", args[0].ToString());
+            ////message = message.Replace("{1}", args[1].ToString());
+            Console.WriteLine(message);
+        }
+
+        private static void TooLongUrl() {
+            string myUrl = $"http://www.sebadoh.com/{new string('A', 5000)}here.html";
+            Console.WriteLine(myUrl);
+        }
+
+        private static void ToMD5() {
+            var g = Guid.NewGuid();
+            var h = Guid.Parse(g.ToString());
+            ////Console.WriteLine($"Guid.Parse(ThisWouldBeAValidCode)={Guid.Parse("ThisWouldBeAValidCode")}");
+            ////Console.WriteLine($"new Guid(ThisWouldBeAValidCode)={new Guid("ThisWouldBeAValidCode")}");
+            Console.WriteLine($"g={g}");
+            Console.WriteLine($"h={h}");
+            Console.WriteLine($"default(Guid)={default(Guid)}");
+
+
+            ////var str = new List<string> { "Output", "Input", "Alberta", "Quebec", "British", "TC", "Canarias", "Vizcaya" };
+            ////var str = new List<string> { "WithholdingType1", "WithholdingType2", "WithholdingType3" };
+            ////var str = new List<string> { "SalesInUK", "SalesToEuVatRegistered", "SalesToEuNotVatRegistered", "SalesInForeignCountries", "SalesInDomesticReverseCharge", "ExemptSales", "NonVatableSales", "PurchasesInUK", "PurchasesInEU", "PurchasesInForeignCountries", "PurchasesInDomesticReverseCharge", "ExemptPurchases", "NonVatablePurchases" };
+            ////var str = new List<string> { "CISNonRegisteredSubcontractor", "CISRegisteredSubcontractor" };
+            ////var str = new List<string> { "Customer" };
+            var str = new List<string> { "code-services" };
+
+            ////str.ToMD5Hash();
+
+            foreach (var s in str) {
+                Console.WriteLine(s + " " + s.ToMD5Hash());
+            }
+
+            var myStrGuid = "c37632ec-c99b-46e9-879a-83d3ed236a55";
+            var myGuid = Guid.Parse(myStrGuid);
+            Console.WriteLine($"myGuid={myGuid}");
         }
     }
 }
