@@ -7,6 +7,7 @@ using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Web.Http;
+using System.Web.Http.Results;
 ////using System.Web.Http.Results;
 
 namespace crosstraining.SerializeDeserialize {
@@ -56,8 +57,8 @@ namespace crosstraining.SerializeDeserialize {
             message.StatusCode = HttpStatusCode.Accepted;
         }
 
-        private static IActionResult GetActionResult(HttpResponseMessage message) {
-            return new ResponseMessageResult(message);
-        }
+        ////private static IActionResult GetActionResult(HttpResponseMessage message) {
+        ////    return new ResponseMessageResult(message);
+        ////}
     }
 }

@@ -1,24 +1,42 @@
-﻿namespace crosstraining {
+﻿namespace crosstraining
+{
+    using crosstraining.encodeurl;
     using crosstraining.events;
     using crosstraining.hierarchy;
     using crosstraining.inheritance.comparer;
     using crosstraining.inheritance.genericinterface;
     using crosstraining.inheritance.useinterface;
+    using crosstraining.json;
     using crosstraining.linq.csv;
     using crosstraining.linq.csv.Entities;
     using crosstraining.MD5;
     using crosstraining.Network;
     using crosstraining.reflection;
+    using crosstraining.regex;
     using crosstraining.SerializeDeserialize;
     using crosstraining.singleton;
+    using Newtonsoft.Json;
     ////using SBC.Accounting.Tax.Service.PerformanceTesting.Setup;
     using System;
     using System.Collections.Generic;
+    using System.Globalization;
     using System.Linq;
     using System.Text;
+    using System.Text.Json;
     using System.Text.RegularExpressions;
+    using System.Threading.Tasks;
+    using static System.Net.WebRequestMethods;
 
-    class Program {
+    class Program
+    {
+        enum GroupType
+        {
+            Input = 0,
+            Output = 1
+        }
+
+        private static GroupType? MyGrouptype { get; set; }
+
         private static Dictionary<string, object> commandArgs = new Dictionary<string, object> {
                 { "-threads", 1},
                 { "-runtime", 1},
@@ -33,7 +51,13 @@
 
         private static bool showDefault;
 
-        static void Main(string[] args) {
+        static async Task Main(string[] args)
+        {
+            ////var a = MyGrouptype.HasValue ? MyGrouptype.Value : default(GroupType);
+
+            ////Console.WriteLine(a);
+            ////Console.WriteLine(GroupType.Input);
+
             //GeneratedGuids();
             //PrintListToString();
             //GetArguments(args);
@@ -58,10 +82,264 @@
             ////DisplayArgsToString();
             ////TooLongUrl();
             ////ToDateFromLong();
-            ToMD5();
+            ////ToDateFromString();
+            ////UrlExamples();
+            ////ToMD5();
+            ////TryJsonTools();
+            ////ListToHastSet();
+            ////OtherDatesTests();
+            ////JsonTools.CompanyLookup();
+            ////DefaultValues();
+            ////LinQ();
+            ////Regex();
+            ////JsonToStrin();
+            ////await WipConsoleOutput();
+            ////KeyValueTuple();
+            ////EnumsToString();
+            ControlOnStrings();
         }
 
-        private static void ToDateFromLong() {
+        private static void ControlOnStrings()
+        {
+            Console.WriteLine(string.Compare("2022-23", "2021-22"));
+            Console.WriteLine(string.Compare("2021-22", "2022-23"));
+            Console.WriteLine(string.Compare("2021-22", "2021-22"));
+
+            var u = "?key1=value1&key2=value2&key3=value3".Replace("?", String.Empty);
+            var t = u.Split("&");
+            foreach (var item in t)
+            {
+                Console.WriteLine(item + " --> " + item.Split("=")[0] + " --> " + item.Split("=")[1]);
+            }
+        }
+
+        private enum Status
+        {
+            Ok,
+            Nok
+        }
+
+        private static void EnumsToString()
+        {
+            Console.WriteLine(Status.Ok.ToString()+ ' ' + Status.Ok);
+            Console.WriteLine(Status.Nok.ToString() + ' ' + Status.Nok);
+
+            long unixDate = 1669734639433;
+            DateTime start = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+            DateTime date = start.AddMilliseconds(unixDate).ToUniversalTime();
+            var z = ((DateTimeOffset)date).ToUnixTimeMilliseconds();
+
+            ////((DateTimeOffset?)this.response.RefreshDetails.LastRefreshDateTime)?.ToUnixTimeMilliseconds()
+        }
+
+        private static void KeyValueTuple()
+        {
+            Console.WriteLine(14/3);
+            Console.WriteLine(14-(14/3));
+
+            var forex = new Dictionary<Tuple<string, string>, decimal>();
+            forex.Add(Tuple.Create("USD", "EUR"), 0.74850m); // 1 USD = 0.74850 EUR
+            forex.Add(Tuple.Create("USD", "GBP"), 0.64128m);
+            forex.Add(Tuple.Create("EUR", "USD"), 1.33635m);
+            forex.Add(Tuple.Create("EUR", "GBP"), 0.85677m);
+            forex.Add(Tuple.Create("GBP", "USD"), 1.55938m);
+            forex.Add(Tuple.Create("GBP", "EUR"), 1.16717m);
+            forex.Add(Tuple.Create("USD", "USD"), 1.00000m);
+            forex.Add(Tuple.Create("EUR", "EUR"), 1.00000m);
+            forex.Add(Tuple.Create("GBP", "GBP"), 1.00000m);
+
+            Console.WriteLine(forex[Tuple.Create("EUR", "GBP")]);
+        }
+
+        private static void JsonToStrin()
+        {
+            var b = "123ABCD";
+            var t = "sebadoh";
+
+            string json = JsonConvert.SerializeObject(new { businessId = b, tradeName = t });
+            Console.WriteLine(json);
+        }
+
+        private static void Regex()
+        {
+            RegexSuite.BusinessId("XAIS12345678910");
+            RegexSuite.BusinessId("XAIS1234567891");
+            RegexSuite.BusinessId("ZAIS12345678910");
+            RegexSuite.BusinessId("XAZZ12345678910");
+            RegexSuite.BusinessId("XAIS1234567891*");
+            RegexSuite.BusinessId("9AIS12345678910");
+            RegexSuite.BusinessId("*AIS12345678910");
+            RegexSuite.BusinessId("X*IS12345678910");
+            RegexSuite.BusinessId("XA*S12345678910");
+            RegexSuite.BusinessId("XAI*12345678910");
+            RegexSuite.BusinessId("XAIS*2345678910");
+            RegexSuite.BusinessId("XAIS123456789100");
+        }
+
+        private static void DefaultValues()
+        {
+            int? v1 = null;
+            int? v2 = 123;
+            Console.WriteLine(v1.GetValueOrDefault());
+            Console.WriteLine(v2.GetValueOrDefault());
+
+            Console.WriteLine(10 / 3);
+            Console.WriteLine(10 % 3);
+
+            var contains = "sage";
+            var title_0 = LongRandomString(5, contains);
+            Console.WriteLine(title_0);
+            var title_1 = LongRandomString(6, contains);
+            Console.WriteLine(title_1);
+            var title_2 = LongRandomString(4, contains);
+            Console.WriteLine(title_2);
+            var title_3 = LongRandomString(7, contains);
+            Console.WriteLine(title_3);
+            var title_4 = LongRandomString(8, contains);
+            Console.WriteLine(title_4);
+
+            for (int i = 0; i < 5; i++)
+            {
+                Console.WriteLine(RandomDay().ToString("yyyy-MM-dd"));
+            }
+
+            var param = "page-item=25";
+            var split = param.Split("=");
+            Console.WriteLine(split[0] + " --> " + split[1]);
+
+            var abc = "abc";
+            var def = "def";
+            var c1 = true;
+            var c2 = false;
+            var c = c1 ? c2 ? abc : def : "DEFAULT";
+            Console.WriteLine($"condition={c}");
+        }
+
+        private static Random gen = new Random();
+        private static DateTime RandomDay()
+        {
+            DateTime start = new DateTime(1995, 1, 1);
+            int range = (DateTime.Today - start).Days;
+            return start.AddDays(gen.Next(range));
+        }
+
+        private static string LongRandomString(int length, string contains)
+        {
+            if (length <= contains.Length)
+            {
+                return contains;
+            }
+            else
+            {
+                var size = ((length - contains.Length) / 2) + 1;
+                var prefix = LongRandomString(size);
+                var suffix = LongRandomString(size);
+                return (prefix + contains + suffix).Substring(0, length);
+            }
+        }
+
+        private static string LongRandomString(int length)
+        {
+            if (length == 0)
+            {
+                return string.Empty;
+            }
+
+            var chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+            var stringChars = new char[length];
+            var random = new Random();
+
+            for (int i = 0; i < stringChars.Length; i++)
+            {
+                stringChars[i] = chars[random.Next(chars.Length)];
+            }
+
+            return new string(stringChars);
+        }
+
+        private static void OtherDatesTests()
+        {
+            var t = DateTime.Today;
+            var y = t.AddDays(-1);
+            var z = new DateTime(y.Year, y.Month, y.Day, 23, 59, 59, 0, DateTimeKind.Utc);
+            Console.WriteLine(t.ToUniversalTime());
+            Console.WriteLine(y.ToUniversalTime());
+            Console.WriteLine(z.ToUniversalTime());
+
+            var a = DateTime.Now;
+            var b = new DateTime(a.Year, a.Month, a.Day, 0, 0, 0).AddMinutes(-1);
+            Console.WriteLine(b.ToUniversalTime());
+
+            var c = new DateTime(DateTime.Today.Year, DateTime.Today.Month, DateTime.Today.Day, 0, 0, 0, 0, DateTimeKind.Utc).AddSeconds(-1);
+            Console.WriteLine(c.ToUniversalTime());
+        }
+
+        private static void ListToHastSet()
+        {
+            var l1 = new List<string>() { "abc", "abc", "def" };
+            var l2 = new List<string>() { "abc", "abc", "def", "123" };
+            var l3 = new List<string>() { "abc", "def" };
+            Console.WriteLine(SameContent(l1, l2));
+            Console.WriteLine(SameContent(l2, l3));
+            Console.WriteLine(SameContent(l1, l3));
+
+            var p = "AddVatStandard, AddFlatCashAccountingVat";
+            ////var t = p.Replace(" ",string.Empty).Split(',');
+
+            var json = System.Text.Json.JsonSerializer.Serialize(p.Replace(" ", string.Empty).Split(','));
+            Console.WriteLine(json);
+        }
+
+        private static bool SameContent(List<string> l1, List<string> l2)
+        {
+            var h1 = l1.ToHashSet<string>();
+            var h2 = l2.ToHashSet<string>();
+
+            if (h1.Count != h2.Count)
+                return false;
+
+            foreach (var item in h1)
+            {
+                if (!h2.Contains(item))
+                    return false;
+            }
+
+            return true;
+        }
+
+        private static void TryJsonTools()
+        {
+            var jsons = new string[] {
+                " [ '08ba261f-ceee-d383-8559-45c8b4491461', 'ec32df32-2867-082e-3d73-c4a3e368a323', '01573cd3-7ad7-c29b-790f-26bca231a8dc']",
+                "{08ba261f-ceee-d383-8559-45c8b4491461}",
+                "[08ba261f-ceee-d383-8559-45c8b4491461]",
+                "'08ba261f-ceee-d383-8559-45c8b4491461'",
+                "['08ba261f-ceee-d383-8559-45c8b4491461']",
+                "08ba261f-ceee-d383-8559-45c8b4491461"
+            };
+            for (int i = 0; i < jsons.Length; i++)
+            {
+                ////Console.WriteLine(JsonTools.IsJsonArray(jsons[i]));
+                var x = JsonTools.ToArray(jsons[i]);
+            }
+        }
+
+        private static void UrlExamples()
+        {
+            EncodeUrlExamples.ToUrl();
+        }
+
+        private static void ToDateFromString()
+        {
+            string timeString = "2018-12-31T23:58:59.999";
+            DateTime dateVal = DateTime.ParseExact(timeString, "yyyy-MM-ddTHH:mm:ss.fff", CultureInfo.InvariantCulture);
+
+            Console.WriteLine(dateVal);
+        }
+
+
+        private static void ToDateFromLong()
+        {
             ////var d = 1622715039701;
 
             ////System.DateTime dtDateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, System.DateTimeKind.Utc);
@@ -81,29 +359,38 @@
             Console.WriteLine(DateTime.UtcNow);
         }
 
-        private static bool GetArguments(string[] args) {
+        private static bool GetArguments(string[] args)
+        {
             if (args.Contains("-h") || args.Contains("-help"))
                 return PrintUsage(availableOperations);
 
-            List<string> operations = (List<string>) commandArgs["-operations"];
+            List<string> operations = (List<string>)commandArgs["-operations"];
             string currentArg = string.Empty;
-            foreach (string arg in args) {
-                if (arg.StartsWith('-')) {
-                    if (!commandArgs.ContainsKey(arg)) {
+            foreach (string arg in args)
+            {
+                if (arg.StartsWith('-'))
+                {
+                    if (!commandArgs.ContainsKey(arg))
+                    {
                         return PrintArgumentError($"The argument {arg} is not valid.");
                     }
                     currentArg = arg;
                 }
-                else {
-                    if (currentArg != "-operations") {
-                        if (Int32.TryParse(arg, out int toIntValue)) {
+                else
+                {
+                    if (currentArg != "-operations")
+                    {
+                        if (Int32.TryParse(arg, out int toIntValue))
+                        {
                             commandArgs[currentArg] = toIntValue;
                         }
-                        else {
+                        else
+                        {
                             return PrintArgumentError($"The value {arg} is not valid for the parameter {currentArg}.");
                         }
                     }
-                    else {
+                    else
+                    {
                         if (availableOperations.Contains(arg))
                             operations.Add(arg);
                         else
@@ -119,12 +406,14 @@
                 return PrintArgumentError($"No operation requested.");
         }
 
-        private static bool PrintArgumentError(string message) {
+        private static bool PrintArgumentError(string message)
+        {
             Console.WriteLine(message);
             return false;
         }
 
-        private static bool PrintUsage(string[] availableOperations) {
+        private static bool PrintUsage(string[] availableOperations)
+        {
             Console.WriteLine("Valid arguments:");
             foreach (string key in commandArgs.Keys)
                 Console.WriteLine($"\t{key}");
@@ -135,14 +424,16 @@
             return false;
         }
 
-        private static void UseGenericInterfaces() {
+        private static void UseGenericInterfaces()
+        {
             IComputerFactory factory = new ComputerFactory();
             var computer = factory.Get();
             Console.WriteLine(computer.GetType());
             Console.WriteLine(computer.Clone().GetType());
         }
 
-        private static void PrintListToString() {
+        private static void PrintListToString()
+        {
             var names = new List<string>() { "John", "Anna", "Monica" };
             var joinedNames = names.Aggregate((a, b) => a + ", " + b);
             Console.WriteLine($"joinedNames = {joinedNames}");
@@ -153,16 +444,18 @@
             string strTargetString = @"-size 100 -operations tax-treatment-create tax-treatment-update tax-treatment-get-all tax-treatment-get-by-id -runtime 1 -name ""Tax Treatment -Thread number = 1"" -threads 1";
 
             var s = myRegex.Split(strTargetString);
-            foreach (var item in s) {
+            foreach (var item in s)
+            {
                 Console.WriteLine(item.ToString().Replace("\"", ""));
             }
         }
 
-        private static void UseInterfaces() {
+        private static void UseInterfaces()
+        {
             IAnimal animal2 = new Dog();
             IAnimal animal = new Dog();
             animal.Move();
-            Dog dog = (Dog) animal;
+            Dog dog = (Dog)animal;
             dog.Bark();
             MoveAnimal(animal);
             MoveAnimal(dog);
@@ -172,11 +465,13 @@
             Console.WriteLine(dog.GetHashCode());
         }
 
-        private static void MoveAnimal(IAnimal animal) {
+        private static void MoveAnimal(IAnimal animal)
+        {
             animal.Move();
         }
 
-        private static void EventsAndHandlers() {
+        private static void EventsAndHandlers()
+        {
             Adder a = new Adder();
 
             a.OnMultipleOfFiveReached += ThingsToDo.ProcessMultipleOfFiveReached;
@@ -192,11 +487,13 @@
             a.OnMultipleOfOtherReached += ThingsToDo.ProcessMultipleOfOtherReached;
             a.OnMultipleOfOtherReached += new EventHandler<MultipleOfOtherEventArgs>(ThingsToDo.ProcessMultipleOfOtherReached);
             // anonymous --> here is "live attachment"...
-            a.OnMultipleOfOtherReached += delegate (object sender, MultipleOfOtherEventArgs e) {
+            a.OnMultipleOfOtherReached += delegate (object sender, MultipleOfOtherEventArgs e)
+            {
                 Console.WriteLine($"ANONYMOUS METHOD --> {e.Value} is a multiple of {e.Text} reached! ");
             };
             // lambda --> here is "live attachment"...
-            a.OnMultipleOfOtherReached += (s, e) => {
+            a.OnMultipleOfOtherReached += (s, e) =>
+            {
                 Console.WriteLine($"LAMBDA METHOD --> {e.Value} is a multiple of {e.Text} reached! ");
             };
 
@@ -216,10 +513,12 @@
             Console.WriteLine("------------------------");
         }
 
-        private static void ActionsOfSomething() {
+        private static void ActionsOfSomething()
+        {
             Adder a = new Adder();
 
-            Action<int, int> SumActionFor1000 = (x, y) => {
+            Action<int, int> SumActionFor1000 = (x, y) =>
+            {
                 x = x * 1000;
                 y++;
                 Console.WriteLine($"Local action {x + y}");
@@ -235,27 +534,32 @@
             a.ProcessAction(10, 1, SumActionFor1000);
         }
 
-        private static void LinqCSV() {
+        private static void LinqCSV()
+        {
             MockData MockData = new MockData();
             List<RegionForTaxesEntity> RegionForTaxesEntityList = MockData.RegionForTaxesEntityList;
             List<TaxRateEntity> TaxRateEntityList = MockData.TaxRateEntityList;
             List<TaxTreatmentEntity> TaxTreatmentEntityList = MockData.TaxTreatmentEntityList;
 
-            foreach (var e in RegionForTaxesEntityList) {
+            foreach (var e in RegionForTaxesEntityList)
+            {
                 Console.WriteLine($"{e.Id} {e.Name} {e.Legislation} {e.IsTheMainRegion} {e.UseFromTaxes} {e.UseMainTaxes}");
             }
             Console.WriteLine("------------\n");
-            foreach (var e in TaxRateEntityList) {
+            foreach (var e in TaxRateEntityList)
+            {
                 Console.WriteLine($"{e.Id} {e.Legislation} {e.Name} {e.RegionForTaxes} {e.TaxTreatment} {e.TaxItemType} {e.TaxCode} {e.Rate} {e.RegionForTaxesId} {e.TaxTreatmentId} {e.TaxItemTypeId} {e.TaxCodeId}");
             }
             Console.WriteLine("------------\n");
-            foreach (var e in TaxTreatmentEntityList) {
+            foreach (var e in TaxTreatmentEntityList)
+            {
                 Console.WriteLine($"{e.Id} {e.Legislation} {e.TaxTreatment} {e.RegionForTaxes} {e.UseFromTaxes} {e.RegionForTaxesId}");
             }
             Console.WriteLine("------------\n");
         }
 
-        private static void Repository() {
+        private static void Repository()
+        {
             List<People> people = new List<People>() {
                 new People{ Id = 1, Name =  "IRIA" },
                 new People{ Id = 2, Name =  "NIL" },
@@ -287,30 +591,35 @@
                 Console.WriteLine($"{f}");
         }
 
-        private static void Comparer() {
+        private static void Comparer()
+        {
             CompareBag compareBag = new CompareBag();
             compareBag.OrderStringList();
             Console.WriteLine("------------\n");
             compareBag.OrderObjectList();
         }
 
-        public struct Pagined {
+        public struct Pagined
+        {
             public int pages;
             public int last;
             public int max;
 
-            public int steps(int i) {
+            public int steps(int i)
+            {
                 if (i < (pages - 1) && pages != 1)
                     return max;
                 else if (i > pages)
                     return 0;
-                else {
+                else
+                {
                     return last;
                 }
             }
         }
 
-        private static Pagined Pages(int max, int size) {
+        private static Pagined Pages(int max, int size)
+        {
             Pagined s = new Pagined();
 
             s.pages = 1;
@@ -320,14 +629,16 @@
             if (size > max)
                 s.pages = (size / max) + ((size % max) > 0 ? 1 : 0);
 
-            if (s.pages != 1) {
+            if (s.pages != 1)
+            {
                 s.last = (size % max);
             }
 
             return s;
         }
 
-        private static void Pagination() {
+        private static void Pagination()
+        {
             Pagined s = Pages(1000, 3125);
             for (int i = 0; i < s.pages; i++)
                 Console.WriteLine(i + " > " + s.steps(i));
@@ -344,7 +655,8 @@
             Console.WriteLine("-----");
         }
 
-        private static void UsingReflection() {
+        private static void UsingReflection()
+        {
             Console.WriteLine(WorkWithReflection.GetCurrentMethod());
 
             Furniture furniture = new Furniture { Id = 1, Name = "CHAIR", Price = 1.23 };
@@ -369,23 +681,28 @@
             WorkWithReflection.GetFolderClasses();
         }
 
-        private static void GeneratedGuids() {
-            for (int i = 0; i < 8000; i++) {
+        private static void GeneratedGuids()
+        {
+            for (int i = 0; i < 8000; i++)
+            {
                 Console.WriteLine($"\"{Guid.NewGuid()}\",");
             }
         }
 
-        private static void SetupDatabase() {
-            for (int i = 0; i < 500; i++) {
+        private static void SetupDatabase()
+        {
+            for (int i = 0; i < 500; i++)
+            {
                 Console.WriteLine($"\"{Guid.NewGuid()}\",");
             }
 
             ////Setup.SetupDatabase().Wait();
         }
 
-        private static readonly Func<int, int, int> InsertTemplatePages = (numberOfTemplates, numberOfQueriesAtOnce) => (int) Math.Ceiling(((double) numberOfTemplates / numberOfQueriesAtOnce));
+        private static readonly Func<int, int, int> InsertTemplatePages = (numberOfTemplates, numberOfQueriesAtOnce) => (int)Math.Ceiling(((double)numberOfTemplates / numberOfQueriesAtOnce));
 
-        private static void SerializeDeserialize() {
+        private static void SerializeDeserialize()
+        {
             ////WorkWithSerialize.SerializeObjectAndRestoreFromXML();
             ////JsonNet.Serialize();
             ////JsonNet.SerializePerformanceTesting();
@@ -394,7 +711,8 @@
             ////JsonNet.Serialize();
         }
 
-        private static void Misc() {
+        private static void Misc()
+        {
             Stack<char> pile = new Stack<char>();
             pile.Push('A');
             pile.Push('B');
@@ -406,32 +724,37 @@
             Console.WriteLine(showDefault);
         }
 
-        private static void IPTools() {
+        private static void IPTools()
+        {
             var iptools = new IPTools();
             iptools.GetIP();
         }
 
-        private static void Singleton() {
+        private static void Singleton()
+        {
             RegulatoryReportingClient.SendAsync();
             //for (int i = 0; i < 100000; i++) {
             //    RegulatoryReportingClient.SendAsync();
             //}
         }
 
-        private static void ToDate() {
+        private static void ToDate()
+        {
             var unixDate = 1613639414318;
             DateTime start = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
             DateTime date = start.AddMilliseconds(unixDate).ToLocalTime();
             Console.WriteLine(date);
         }
 
-        private static List<object> GetFeatures(List<Guid> guids) {
+        private static List<object> GetFeatures(List<Guid> guids)
+        {
             if (!guids.Any())
                 return new List<object>();
 
             var sb = new StringBuilder();
 
-            foreach (var guid in guids) {
+            foreach (var guid in guids)
+            {
                 sb.Append("0x").Append(string.Join(string.Empty, guid.ToByteArray().Select(r => $"{r:X2}"))).Append(',');
             }
 
@@ -440,7 +763,8 @@
             };
         }
 
-        private static void GuidToBinary() {
+        private static void GuidToBinary()
+        {
             var guids = new List<Guid> {
                 Guid.Parse("c8eaa996-28fd-442e-b2f2-2988124bedcb"),
                 Guid.Parse("ef0a1600-97cd-1d16-dad5-1378d1457e32"),
@@ -590,7 +914,8 @@
             Console.WriteLine(GetFeatures(guids)[0]);
         }
 
-        private static void DisplayDuration() {
+        private static void DisplayDuration()
+        {
             ////DateTime d1 = DateTime.Now;
             ////DateTime d2 = DateTime.Now.AddDays(-1);
 
@@ -609,48 +934,53 @@
             Console.WriteLine(Math.Round((b - a).TotalMinutes, 2));
 
             ////TimeSpan ts = TimeSpan.FromMinutes(62.8);
-            TimeSpan ts = (b-a);
+            TimeSpan ts = (b - a);
             string output = string.Format("{0}:{1}",
                  // Display the total minutes, throwing away the fractional portion.
-                 (int) ts.TotalMinutes,
+                 (int)ts.TotalMinutes,
                  // Display the seconds component (0-59) as two digits with a leading
                  // zero if necessary.
                  ts.Seconds.ToString("D2"));
             Console.WriteLine(output);
         }
 
-        private static void ReadDataFileFromEmbeddedDataDirectory() {
+        private static void ReadDataFileFromEmbeddedDataDirectory()
+        {
             Console.WriteLine(Guid.Parse("SBC.Tax.Code.Max"));
             string folder = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
             Console.WriteLine(folder);
         }
 
-        private static void DisplayArgsToString() {
+        private static void DisplayArgsToString()
+        {
             ////object[] args = { "1", "Server = localhost; User Id = root; GuidFormat = LittleEndianBinary16; Connection Timeout = 1; Connection Lifetime = 1800; Connection Idle Timeout = 300; Minimum Pool Size = 3; Default Command Timeout = 1; Use Affected Rows = True; Connection Reset = True; CancellationTimeout = 1" };
-            object[] args = {};
+            object[] args = { };
             var message = "Pool{0} creating new connection pool for ConnectionString: {1}";
 
-            for (int i = 0; i < args.Length; i++) {
-                message = message.Replace("{"+i+"}", args[i].ToString());
+            for (int i = 0; i < args.Length; i++)
+            {
+                message = message.Replace("{" + i + "}", args[i].ToString());
             }
             ////message = message.Replace("{0}", args[0].ToString());
             ////message = message.Replace("{1}", args[1].ToString());
             Console.WriteLine(message);
         }
 
-        private static void TooLongUrl() {
+        private static void TooLongUrl()
+        {
             string myUrl = $"http://www.sebadoh.com/{new string('A', 5000)}here.html";
             Console.WriteLine(myUrl);
         }
 
-        private static void ToMD5() {
-            var g = Guid.NewGuid();
-            var h = Guid.Parse(g.ToString());
+        private static void ToMD5()
+        {
+            ////var g = Guid.NewGuid();
+            ////var h = Guid.Parse(g.ToString());
             ////Console.WriteLine($"Guid.Parse(ThisWouldBeAValidCode)={Guid.Parse("ThisWouldBeAValidCode")}");
             ////Console.WriteLine($"new Guid(ThisWouldBeAValidCode)={new Guid("ThisWouldBeAValidCode")}");
-            Console.WriteLine($"g={g}");
-            Console.WriteLine($"h={h}");
-            Console.WriteLine($"default(Guid)={default(Guid)}");
+            ////Console.WriteLine($"g={g}");
+            ////Console.WriteLine($"h={h}");
+            ////Console.WriteLine($"default(Guid)={default(Guid)}");
 
 
             ////var str = new List<string> { "Output", "Input", "Alberta", "Quebec", "British", "TC", "Canarias", "Vizcaya" };
@@ -658,17 +988,62 @@
             ////var str = new List<string> { "SalesInUK", "SalesToEuVatRegistered", "SalesToEuNotVatRegistered", "SalesInForeignCountries", "SalesInDomesticReverseCharge", "ExemptSales", "NonVatableSales", "PurchasesInUK", "PurchasesInEU", "PurchasesInForeignCountries", "PurchasesInDomesticReverseCharge", "ExemptPurchases", "NonVatablePurchases" };
             ////var str = new List<string> { "CISNonRegisteredSubcontractor", "CISRegisteredSubcontractor" };
             ////var str = new List<string> { "Customer" };
-            var str = new List<string> { "code-services" };
+            ////var str = new List<string> { "code-services" };
+            ////var str = new List<string> { "StandardVat", "CashAccountingVat", "FlatCashAccountingVat" };
+            var str = new List<string> { "Code-T0", "CodeT0", "CodeT10" };
+            ////var str = new List<string> { "AddStandardVat", "AddCashAccountingVat", "AddFlatStandardVat", "AddFlatCashAccountingVat", "AddCashStandardVat" };
 
             ////str.ToMD5Hash();
 
-            foreach (var s in str) {
+            foreach (var s in str)
+            {
                 Console.WriteLine(s + " " + s.ToMD5Hash());
             }
 
-            var myStrGuid = "c37632ec-c99b-46e9-879a-83d3ed236a55";
-            var myGuid = Guid.Parse(myStrGuid);
-            Console.WriteLine($"myGuid={myGuid}");
+            ////var myStrGuid = "c37632ec-c99b-46e9-879a-83d3ed236a55";
+            ////var myGuid = Guid.Parse(myStrGuid);
+            ////Console.WriteLine($"myGuid={myGuid}");
+        }
+
+        private static void LinQ()
+        {
+            var l = new List<string>() { "abc", "def" };
+            var c = l.Any(x => x == "123");
+            var e = l.Any(x => x == "abc");
+        }
+
+        private static async Task WipConsoleOutput()
+        {
+            var origRow = Console.CursorTop;
+            var origCol = Console.CursorLeft;
+
+            for (int i = 0; i < 100000; i++)
+            {
+                Console.SetCursorPosition(origCol, origRow);
+                await Task.Delay(100);
+                Console.Write("/");
+                ////Console.Write((char)13);
+                Console.SetCursorPosition(origCol, origRow);
+                await Task.Delay(100);
+                Console.Write("-" );
+                ////Console.Write((char)13);
+                Console.SetCursorPosition(origCol, origRow);
+                await Task.Delay(100);
+                Console.Write("\\");
+                ////Console.Write((char)13);
+                Console.SetCursorPosition(origCol, origRow);
+                await Task.Delay(100);
+                Console.Write("|");
+                ////Console.Write((char)13);
+                Console.SetCursorPosition(origCol, origRow);
+                await Task.Delay(100);
+                Console.Write("/");
+                ////Console.Write((char)13);
+                Console.SetCursorPosition(origCol, origRow);
+                await Task.Delay(100);
+                Console.Write("-");
+                ////Console.Write((char)13);
+            }
         }
     }
 }
