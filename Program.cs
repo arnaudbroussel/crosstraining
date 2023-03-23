@@ -10,11 +10,13 @@
     using crosstraining.linq.csv;
     using crosstraining.linq.csv.Entities;
     using crosstraining.MD5;
+    using crosstraining.moreevents;
     using crosstraining.Network;
     using crosstraining.reflection;
     using crosstraining.regex;
     using crosstraining.SerializeDeserialize;
     using crosstraining.singleton;
+    using Microsoft.AspNetCore.Http;
     using Newtonsoft.Json;
     ////using SBC.Accounting.Tax.Service.PerformanceTesting.Setup;
     using System;
@@ -33,6 +35,15 @@
         {
             Input = 0,
             Output = 1
+        }
+
+        enum OtherGroupType
+        {
+            InputAbc = 0,
+            OutputDef = 1,
+            Output = 2,
+            qwerty = 98,
+            azerty = 99
         }
 
         private static GroupType? MyGrouptype { get; set; }
@@ -96,14 +107,42 @@
             ////await WipConsoleOutput();
             ////KeyValueTuple();
             ////EnumsToString();
-            ControlOnStrings();
+            ////ControlOnStrings();
+            ////StringEnum();
+            ////EventsTester.Example1();
+            ////EventsTester.Example2();
+            EventsTester.Example3();
+        }
+
+        private static void StringEnum()
+        {
+            var x = Enum.Parse<GroupType>("Output");
+            Console.WriteLine(x + " --> " + (int)x);
+            x = Enum.Parse<GroupType>("Input");
+            Console.WriteLine(x + " --> " + (int)x);
+            var a = Enum.Parse<OtherGroupType>("InputAbc");
+            Console.WriteLine(a + " --> " + (int)a);
+            var z = string.Concat("Output", "Def");
+            a = Enum.Parse<OtherGroupType>(z);
+            Console.WriteLine(a + " --> " + (int)a);
+            a = Enum.Parse<OtherGroupType>("qwerty");
+            Console.WriteLine(a + " --> " + (int)a);
+            a = Enum.Parse<OtherGroupType>("azerty");
+            Console.WriteLine(a + " --> " + (int)a);
+            var b = $"{OtherGroupType.Output}{"Def"}";
+            Console.Write(b + " ==> ");
+            var c = (int)Enum.Parse<OtherGroupType>(b);
+            Console.WriteLine(c);
+            Console.WriteLine();
+            var d = new string[] { }.ToString();
+            Console.WriteLine(d);
         }
 
         private static void ControlOnStrings()
         {
-            Console.WriteLine(string.Compare("2022-23", "2021-22"));
-            Console.WriteLine(string.Compare("2021-22", "2022-23"));
-            Console.WriteLine(string.Compare("2021-22", "2021-22"));
+            ////Console.WriteLine(string.Compare("2022-23", "2021-22"));
+            ////Console.WriteLine(string.Compare("2021-22", "2022-23"));
+            ////Console.WriteLine(string.Compare("2021-22", "2021-22"));                                                    
 
             var u = "?key1=value1&key2=value2&key3=value3".Replace("?", String.Empty);
             var t = u.Split("&");
@@ -111,6 +150,16 @@
             {
                 Console.WriteLine(item + " --> " + item.Split("=")[0] + " --> " + item.Split("=")[1]);
             }
+
+            var z = u.Split("&").Where(x => x.StartsWith("key2")).ToList();
+            if (z.Any())
+                Console.WriteLine(z.First().Split("=")[1]);
+            z = u.Split("&").Where(x => x.StartsWith("key2000")).ToList();
+            if (z.Any())
+                Console.WriteLine(z.First().Split("=")[1]);
+            z = u.Split("&").Where(x => x.StartsWith("key1")).ToList();
+            if (z.Any())
+                Console.WriteLine(z.First().Split("=")[1]);
         }
 
         private enum Status
