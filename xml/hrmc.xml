@@ -1,0 +1,40 @@
+﻿<IRenvelope xmlns="http://www.govtalk.gov.uk/taxation/SA/SA800/23-24/1">
+  <IRheader>
+    <Keys>
+      <Key Type="UTR">{{partnershiptaxutpr}}</Key>
+    </Keys>
+    <PeriodEnd>{{constpartnershipaccountingperiodend_datedash}}</PeriodEnd>
+    <Principal>
+      <Contact/>
+    </Principal>
+    <Agent>
+      <AgentID>1122334</AgentID>
+      <Address>
+        <Line>Postal Street</Line>
+        <PostCode>NE1 1EH</PostCode>
+      </Address>
+    </Agent>
+    <DefaultCurrency>GBP</DefaultCurrency>
+    <Manifest>
+      <Contains>
+        <Reference>
+          <Namespace>https://www.sage.com</Namespace>
+          <SchemaVersion>4241-v26.16</SchemaVersion>
+          <TopElementName>string</TopElementName>
+        </Reference>
+        <Reference>
+          <Namespace>https://www.sage.com</Namespace>
+          <SchemaVersion>9252-v8.7</SchemaVersion>
+          <TopElementName>string</TopElementName>
+        </Reference>
+      </Contains>
+    </Manifest>
+    <Sender>Trust</Sender>
+  </IRheader>
+  <SApartnership>
+    <PartnershipName>CodeGroup</PartnershipName>
+    <Declaration>
+      <PartnershipDeclaration>yes</PartnershipDeclaration>
+    </Declaration>
+  </SApartnership>
+</IRenvelope>

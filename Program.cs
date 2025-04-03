@@ -1,6 +1,10 @@
 ﻿namespace crosstraining
 {
+    using crosstraining.c14n;
+    using crosstraining.duplicates;
     using crosstraining.encodeurl;
+    using crosstraining.enums;
+    using crosstraining.ErrorsCodesSeek;
     using crosstraining.events;
     using crosstraining.hierarchy;
     using crosstraining.inheritance.comparer;
@@ -9,6 +13,7 @@
     using crosstraining.json;
     using crosstraining.linq.csv;
     using crosstraining.linq.csv.Entities;
+    using crosstraining.listtodistinct;
     using crosstraining.MD5;
     using crosstraining.moreevents;
     using crosstraining.Network;
@@ -16,21 +21,57 @@
     using crosstraining.regex;
     using crosstraining.SerializeDeserialize;
     using crosstraining.singleton;
+    using crosstraining.xml;
     using Microsoft.AspNetCore.Http;
+    using Microsoft.VisualBasic;
     using Newtonsoft.Json;
-    ////using SBC.Accounting.Tax.Service.PerformanceTesting.Setup;
+    using Newtonsoft.Json.Linq;
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics;
+    using System.Dynamic;
     using System.Globalization;
     using System.Linq;
     using System.Text;
     using System.Text.Json;
     using System.Text.RegularExpressions;
     using System.Threading.Tasks;
+    using System.Xml.Linq;
     using static System.Net.WebRequestMethods;
 
     class Program
     {
+        public static List<Guid> TenantIds => new List<string>
+            {
+                "281561E7-77B8-6887-C98C-A74351FE38ED",
+                "381561E7-77B8-6887-C98C-A74351FE38ED",
+                "481561E7-77B8-6887-C98C-A74351FE38ED",
+                "581561E7-77B8-6887-C98C-A74351FE38ED",
+                "681561E7-77B8-6887-C98C-A74351FE38ED",
+                "781561E7-77B8-6887-C98C-A74351FE38ED",
+                "881561E7-77B8-6887-C98C-A74351FE38ED",
+                "981561E7-77B8-6887-C98C-A74351FE38ED",
+                "a81561E7-77B8-6887-C98C-A74351FE38ED",
+                "b81561E7-77B8-6887-C98C-A74351FE38ED",
+                "c81561E7-77B8-6887-C98C-A74351FE38ED",
+                "d81561E7-77B8-6887-C98C-A74351FE38ED",
+                "e81561E7-77B8-6887-C98C-A74351FE38ED",
+                "f81561E7-77B8-6887-C98C-A74351FE38ED",
+                "011561E7-77B8-6887-C98C-A74351FE38ED",
+                "021561E7-77B8-6887-C98C-A74351FE38ED",
+                "021561E7-77B8-6887-C98C-A74351FE38ED",
+                "031561E7-77B8-6887-C98C-A74351FE38ED",
+                "041561E7-77B8-6887-C98C-A74351FE38ED",
+                "051561E7-77B8-6887-C98C-A74351FE38ED",
+                "061561E7-77B8-6887-C98C-A74351FE38ED",
+                "071561E7-77B8-6887-C98C-A74351FE38ED",
+                "081561E7-77B8-6887-C98C-A74351FE38ED",
+                "091561E7-77B8-6887-C98C-A74351FE38ED",
+                "0a1561E7-77B8-6887-C98C-A74351FE38ED",
+                "0b1561E7-77B8-6887-C98C-A74351FE38ED",
+                "0c746F92-4678-70BC-80E5-6E93E7EAE3BD"
+            }.Select(p => Guid.Parse(p)).ToList();
+
         enum GroupType
         {
             Input = 0,
@@ -111,7 +152,270 @@
             ////StringEnum();
             ////EventsTester.Example1();
             ////EventsTester.Example2();
-            EventsTester.Example3();
+            ////EventsTester.Example3();
+            ////AnomymousList();
+            ////EnumsImplictCasts();
+            ////RandomElementInList();
+            ////CastEnum();
+            ////Arrondir();
+            ////WorkWithNullables();
+            ////ListOfDistinct();
+            ////UseHashSet();
+            ////Duplicates.GetDuplicates();
+            ////HandleEnuly();
+            ////DeclareListOsGuidFromStrings();
+            ////ManageAnonymous();
+            ////SignVerifyEnvelope.DoThatc14nThing();
+            ////HandleXml.TestXml();
+            ////HandleXml.TestXmlHrmc();
+            ErrorsCodesSeek();
+        }
+
+        private static void ErrorsCodesSeek()
+        {
+            ErrorsCodesSeekHelper.Seek(
+                "C:\\dev\\sbc.common.compliancecentre.service\\src\\SBC.Common.ComplianceCentre.Service.Domain.Core\\ErrorCodes",
+                "C:\\dev\\sbc.common.compliancecentre.service\\src\\SBC.Common.ComplianceCentre.Service.API\\Exceptions");
+        }
+
+        private static void DeclareListOsGuidFromStrings()
+        {
+            var l = TenantIds.GetRange(0, 2);
+            foreach (var item in l)
+            {
+                Console.WriteLine(item);
+            }
+        }
+
+        private static void HandleEnuly()
+        {
+            var test = ParsedPipelineName("x");
+
+            for (int i = 0; i < 5; i++)
+            {
+                var valueToEnum = ParsedPipelineName(i.ToString());
+            
+                if (string.IsNullOrEmpty(valueToEnum))
+                {
+                    Console.WriteLine("NULL");
+                }
+                else
+                {
+                    Console.WriteLine(valueToEnum);
+                }
+            }
+        }
+
+        private static string ParsedPipelineName(string strValue)
+        {
+            try
+            {
+                var value = int.Parse(strValue);
+                bool isInRange = !string.IsNullOrEmpty(Enum.GetName(typeof(PipelineName), value));
+                if (isInRange)
+                {
+                    _ = Enum.TryParse<PipelineName>(value.ToString(), out var pipeline);
+                    return pipeline.ToString();
+                }
+                else
+                {
+                    return null;
+                }
+            }
+            catch (Exception e)
+            {
+                throw;
+            }
+        }
+
+        private static void ListOfDistinct()
+        {
+            var l = LinqListToDistinct.ListOfDistinct();
+        }
+
+        private static void WorkWithNullables()
+        {
+            var dico = new Dictionary<string, object>() { { "k1", "" }, { "k2", null }, { "k3", "this_is_code" } };
+            var k1 = dico["k1"];            
+            var k2 = dico["k2"];
+            var k3 = dico["k3"];
+
+            var s1 = Guid.TryParse(k1?.ToString(), out _)
+                            ? Guid.Parse(k1.ToString())
+                            : k1?.ToString().Trim().ToMD5Hash();
+            var s2 = Guid.TryParse(k2?.ToString(), out _)
+                            ? Guid.Parse(k2.ToString())
+                            : k2?.ToString().Trim().ToMD5Hash();
+            var s3 = Guid.TryParse(k3?.ToString(), out _)
+                            ? Guid.Parse(k3.ToString())
+                            : k3?.ToString().Trim().ToMD5Hash();
+
+            var t0 = "";
+            var z0 = Guid.TryParse(t0.ToString(), out _)
+                            ? Guid.Parse(t0.ToString())
+                            : t0?.ToMD5Hash();
+
+            string string0 = "";
+            var zstring0 = Guid.TryParse(string0.ToString(), out _)
+                            ? Guid.Parse(string0.ToString())
+                            : string0?.ToMD5Hash();
+
+            string string1 = null;
+            var zstring1 = string1 != null
+                            ? Guid.TryParse(string1.ToString(), out _)
+                                ? Guid.Parse(string1.ToString())
+                                : string1?.ToMD5Hash()
+                            : null;
+        }
+
+        private static void UseHashSet()
+        {
+            HashSet<Guid> tenantIdsToDeletex = new();
+
+            Guid v1 = Guid.NewGuid();
+            Guid v2 = Guid.NewGuid();
+            Guid v3 = Guid.NewGuid();
+
+            tenantIdsToDeletex.Add(v1);
+            tenantIdsToDeletex.Add(v2);
+            tenantIdsToDeletex.Add(v3);
+
+            tenantIdsToDeletex.Add(v1);
+            tenantIdsToDeletex.Add(v2);
+            tenantIdsToDeletex.Add(v3);
+        }
+
+        private static void Arrondir()
+        {
+            var x = 99;
+            var y = 100;
+
+            Console.WriteLine("maxLoop = " + (int)Math.Ceiling(((double)x) / y));
+        }
+
+        private static void CastEnum()
+        {
+            var s = "Initialising";
+            var d = Enum.TryParse<WorkflowStatus>(s, out var myReadMode) ? myReadMode : (WorkflowStatus?)null;
+            Console.WriteLine(d);
+
+            string z = null;
+            var e = Enum.TryParse<WorkflowStatus>(z, out var myReadMode2) ? myReadMode2 : (WorkflowStatus?)null;
+            Console.WriteLine(e);
+        }
+
+        ////private static void EnumsImplictCasts()
+        ////{
+        ////    var c1 = new Class1();
+        ////    c1.Status = WorkflowStatus.Started;
+
+        ////    Class2 c2 = c1;            
+
+        ////    c1.Status = WorkflowStatus.BusinessInformationComplete;
+
+        ////    c2 = c1;            
+        ////}
+
+        private static void RandomElementInList()
+        {
+            var otherStatus = new List<string>(new string[] { "501", "502", "503", "504", "505", "506", "506", "507", "508", "510", "511" });
+            Random r = new Random();
+            for (int i = 0; i < 10; i++)
+            {                             
+                Console.WriteLine(otherStatus.OrderBy(x => r.Next()).First());
+            }
+        }
+
+        private struct NotAnonymous
+        {
+            public string StepName;
+            public bool IsError;
+        }
+
+        private static void AnomymousList()
+        {
+            var l1 = new List<NotAnonymous>()
+            {
+                new NotAnonymous()
+                {
+                    StepName = "1",
+                    IsError = true
+                },
+                new NotAnonymous()
+                {
+                    StepName = "2",
+                    IsError = false
+                },
+                new NotAnonymous()
+                {
+                    StepName = "3",
+                    IsError = true
+                },
+                new NotAnonymous()
+                {
+                    StepName = "4",
+                    IsError = false
+                },
+            };
+
+            var l2 = new List<NotAnonymous>()
+            {
+                new NotAnonymous()
+                {
+                    StepName = "1",
+                    IsError = true
+                },
+                new NotAnonymous()
+                {
+                    StepName = "2",
+                    IsError = false
+                },
+                new NotAnonymous()
+                {
+                    StepName = "3",
+                    IsError = true
+                },
+                new NotAnonymous()
+                {
+                    StepName = "4",
+                    IsError = false
+                },
+            };
+
+            var l3 = new List<NotAnonymous>()
+            {
+                new NotAnonymous()
+                {
+                    StepName = "1",
+                    IsError = true
+                },
+                new NotAnonymous()
+                {
+                    StepName = "2",
+                    IsError = false
+                },
+                new NotAnonymous()
+                {
+                    StepName = "3",
+                    IsError = true
+                },
+                new NotAnonymous()
+                {
+                    StepName = "4",
+                    IsError = false
+                },
+                new NotAnonymous()
+                {
+                    StepName = "5",
+                    IsError = false
+                },
+            };
+
+            var l4 = l1.Where(x => !l2.Any(y => y.StepName == x.StepName)).ToList();
+            var l5 = l1.Where(x => !l3.Any(y => y.StepName == x.StepName)).ToList().Count;
+            var l6 = l3.Where(x => !l1.Any(y => y.StepName == x.StepName)).ToList().Count;
+
+            Console.WriteLine(l5 == 0 && l6 == 0);
         }
 
         private static void StringEnum()
@@ -1092,6 +1396,39 @@
                 await Task.Delay(100);
                 Console.Write("-");
                 ////Console.Write((char)13);
+            }
+        }
+
+        private static void ManageAnonymous()
+        {
+            var d1 = new Dictionary<string, object>();
+            var d2 = new Dictionary<string, object>();
+
+            d1.Add("partnershippartnershipstatementpartnerdetails_index", 1);
+            d1.Add("partnernominate", true);
+            d1.Add("partnerfullname", "Tim Hughes");
+            d1.Add("partnershareorloss", "£ 80,000.00");
+
+            d2.Add("partnershippartnershipstatementpartnerdetails_index", 2);
+            d2.Add("partnernominate", true);
+            d2.Add("partnerfullname", "Gerard Love");
+            d2.Add("partnershareorloss", "£ 9,200.00");
+
+
+            var d = new Dictionary<string, object>();
+            d.Add("partnershipuniquetaxpayersreference", "7210158404");
+            d.Add("reportgeneratedon", "12 /12/12 at 12=12");
+            d.Add("practicename", "Accountancy Practice");
+            d.Add("constpartnershipaccountingperiodstart", "2023 -04-06");
+            d.Add("partnershippartnershipstatementpartnerdetails", new[] { d1, d2 });
+
+            var json = JsonConvert.SerializeObject(d, Formatting.Indented);
+
+            var response = new ExpandoObject();
+            // imagine dict contains some data
+            foreach (var kvp in d)
+            {
+                (response as IDictionary<string, object>)[kvp.Key] = kvp.Value;
             }
         }
     }
