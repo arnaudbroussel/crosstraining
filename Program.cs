@@ -6,6 +6,7 @@
     using crosstraining.enums;
     using crosstraining.ErrorsCodesSeek;
     using crosstraining.events;
+    using crosstraining.FixedAssets;
     using crosstraining.hierarchy;
     using crosstraining.inheritance.comparer;
     using crosstraining.inheritance.genericinterface;
@@ -168,7 +169,8 @@
             ////SignVerifyEnvelope.DoThatc14nThing();
             ////HandleXml.TestXml();
             ////HandleXml.TestXmlHrmc();
-            ErrorsCodesSeek();
+            ////ErrorsCodesSeek();
+            FixedAssetsHelper.AmortissementDegressif();
         }
 
         private static void ErrorsCodesSeek()
